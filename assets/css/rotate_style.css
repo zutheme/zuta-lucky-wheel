@@ -1,0 +1,474 @@
+/* ==========================================================================
+   LUCKY THE WHEEL - PLUGIN STYLESHEET
+   Description: Core styles for the popup, game canvas, and gift trigger animations.
+   ========================================================================== */
+
+/* =========================================
+   1. POPUP WRAPPER (WHEEL BACKGROUND)
+   ========================================= */
+#ltw-popup-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* High z-index to overlay menu/header, but lower than Popup Form */
+    z-index: 999990; 
+    
+    background: rgba(0, 0, 0, 0.85);
+    
+    /* Center the wheel */
+    display: none; /* Hidden by default, JS will fadeIn */
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Fix jQuery fadeIn breaking flex display (Important) */
+#ltw-popup-wrapper[style*="display: block"] {
+    display: flex !important;
+}
+
+/* =========================================
+   2. GAME AREA (CANVAS)
+   ========================================= */
+#area-game {
+    position: relative;
+    z-index: 999991; /* 1 unit higher than black background */
+    
+    /* Ensure responsiveness */
+    max-width: 100vw;
+    max-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#area-game canvas {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto !important;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+/* =========================================
+   3. LOADING SCREEN
+   ========================================= */
+#ltw-loading {
+    z-index: 9999999 !important;
+}
+
+/* =========================================
+   4. POPUP RESULT FORM (INPUT & NOTIFICATION)
+   This class is appended to body by JS after spinning
+   ========================================= */
+.ltw-popup-form,
+.ltw-notification-overlay {
+    /* Mandatory: Full screen overlay covering everything */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9); /* Dark background to highlight form */
+    
+    z-index: 99999999 !important; /* HIGHEST: Overlay on top of wheel */
+    
+    /* Center the form */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    overflow-y: auto;
+    animation: ltwFadeIn 0.3s ease-out;
+}
+
+/* =========================================
+   5. FORM BOX STYLE
+   ========================================= */
+.ltw-popup-form .ltw-form,
+.ltw-popup-notify .ltw-form,
+.ltw-notification-overlay .ltw-form {
+    position: relative;
+    background-color: #fff;
+    width: 90%;
+    max-width: 400px;
+    margin: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    text-align: center;
+    padding: 0;
+    overflow: hidden; /* For border-radius to work with header */
+}
+
+/* Header */
+.ltw-popup-form .head-congrate,
+.ltw-notification-overlay .head-congrate {
+    background: #f8f9fa;
+    padding: 20px 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.ltw-popup-form .head-congrate h4,
+.ltw-notification-overlay .head-congrate h4 {
+    margin: 0 0 10px 0;
+    color: #d32f2f; /* Red color for emphasis */
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.ltw-popup-form .head-congrate p {
+    margin: 5px 0;
+    color: #555;
+    font-size: 16px;
+}
+
+.ltw-popup-form .head-congrate .namegif {
+    color: #2e7d32; /* Green color for gift name */
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* =========================================
+   6. INPUT AND BUTTON STYLES
+   ========================================= */
+.ltw-popup-form .form-input {
+    padding: 20px;
+}
+
+.ltw-popup-form .form-group {
+    margin-bottom: 15px;
+}
+
+/* Input fields */
+.ltw-popup-form input.fullname,
+.ltw-popup-form input.phone,
+.ltw-popup-form input.email {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box; /* Ensure padding doesn't break layout */
+    transition: border-color 0.3s;
+}
+
+.ltw-popup-form input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Submit Button */
+.ltw-popup-form button.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s;
+}
+
+.ltw-popup-form button.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Close Button (X) - For Forms */
+.ltw-popup-form .btn-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    line-height: 30px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #ccc;
+    color: #333;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s;
+}
+
+.ltw-popup-form .btn-close:hover {
+    background: #ff4d4d;
+    color: #fff;
+    border-color: #ff4d4d;
+}
+
+/* =========================================
+   7. ANIMATION UTILS
+   ========================================= */
+@keyframes ltwFadeIn {
+    from { 
+        opacity: 0; 
+        transform: scale(0.9); 
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1); 
+    }
+}
+
+/* =========================================
+   8. GIFT TRIGGER (INITIAL POPUP)
+   ========================================= */
+.ltw-gift-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999980; /* Lower than wrapper game (999990) */
+    
+    /* Background Overlay */
+    background-color: rgba(0, 0, 0, 0.6);
+    
+    /* Blur Effect */
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+
+    /* Allow click through overlay (important for particles) */
+    pointer-events: none; 
+    
+    /* Center Content Vertically */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+    overflow: hidden;
+    perspective: 1000px;
+}
+
+.ltw-gift-link {
+    pointer-events: auto; /* Enable click for gift */
+    cursor: pointer;
+    display: block;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    z-index: 2;
+}
+
+.ltw-gift-link:hover {
+    transform: scale(1.15);
+}
+
+.ltw-gift-img {
+    max-width: 150px;
+    width: 100%;
+    height: auto;
+    
+    /* Highlight Effect */
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
+
+    /* Shake Animation */
+    animation: ltwShake 2.5s infinite ease-in-out;
+}
+
+@keyframes ltwShake {
+    0%, 100% { transform: rotate(0deg); }
+    10% { transform: rotate(-8deg); }
+    20% { transform: rotate(8deg); }
+    30% { transform: rotate(-8deg); }
+    40% { transform: rotate(8deg); }
+    50% { transform: rotate(0deg); }
+}
+
+/* =========================================
+   9. LUCKY TEXT EFFECT (NEON PULSE)
+   ========================================= */
+.ltw-lucky-text {
+    margin-bottom: 20px;
+    z-index: 999982;
+    pointer-events: none;
+}
+
+.ltw-text-title {
+    font-family: sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    margin: 0 0 10px 0;
+    color: #FFD700; /* Gold */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    
+    /* Neon Glow */
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7), 0 0 20px rgba(255, 215, 0, 0.5);
+    
+    /* Animation */
+    animation: ltwPulseText 1.5s infinite alternate;
+}
+
+.ltw-text-desc {
+    font-family: sans-serif;
+    font-size: 18px;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.4;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.ltw-text-desc strong {
+    color: #00ffea; /* Neon Cyan */
+    font-size: 22px;
+    font-weight: bold;
+}
+
+@keyframes ltwPulseText {
+    0% {
+        transform: scale(1);
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+    }
+    100% {
+        transform: scale(1.1);
+        text-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 40px #ff00de;
+    }
+}
+
+/* =========================================
+   10. FIREWORKS EFFECT (BACKGROUND)
+   ========================================= */
+.ltw-firework {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    animation: ltwFireworkExplode 1s ease-out forwards;
+}
+
+/* Keyframe for the explosion using box-shadow */
+@keyframes ltwFireworkExplode {
+    0% {
+        transform: scale(0.1);
+        opacity: 1;
+        box-shadow: 
+            0 0 0 0 #ff0000, 
+            0 0 0 0 #ffff00, 
+            0 0 0 0 #00ff00, 
+            0 0 0 0 #0000ff, 
+            0 0 0 0 #ff00ff, 
+            0 0 0 0 #00ffff;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+        /* Scatter particles outward */
+        box-shadow: 
+            -60px -60px 0 0 #ff0000, 
+             60px -60px 0 0 #ffff00, 
+             60px  60px 0 0 #00ff00, 
+            -60px  60px 0 0 #0000ff, 
+             0   -90px 0 0 #ff00ff, 
+             0    90px 0 0 #00ffff,
+            -90px  0   0 0 #ffffff,
+             90px  0   0 0 #ffaa00;
+    }
+}
+
+/* =========================================
+   11. CLICK HINT POINTER (ARROW & TEXT)
+   ========================================= */
+.ltw-click-hint {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 999982;
+    pointer-events: none;
+    
+    /* Bounce Animation */
+    animation: ltwBounceHint 1s infinite alternate ease-in-out;
+}
+
+.ltw-arrow-up {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 15px solid #fff;
+    margin-bottom: 5px;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
+}
+
+.ltw-hint-text {
+    font-family: sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+@keyframes ltwBounceHint {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(10px); }
+}
+
+/* =========================================
+   12. GIFT CLOSE BUTTON
+   ========================================= */
+.ltw-gift-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 50%;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 999985;
+    
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(4px);
+    
+    pointer-events: auto; 
+    transition: all 0.3s ease;
+}
+
+.ltw-gift-close:hover {
+    background: #ff4d4d;
+    border-color: #fff;
+    transform: rotate(90deg);
+}
+
+/* =========================================
+   13. RESPONSIVE
+   ========================================= */
+@media (max-width: 600px) {
+    .ltw-text-title {
+        font-size: 24px;
+    }
+    .ltw-text-desc {
+        font-size: 16px;
+    }
+    .ltw-gift-img {
+        max-width: 120px;
+    }
+}

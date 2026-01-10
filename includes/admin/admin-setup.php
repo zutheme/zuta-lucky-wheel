@@ -1,0 +1,136 @@
+<?php
+/**
+ * LTW Admin Setup Class
+ * Handles the rendering of the Game Design and Settings UI in the Admin Dashboard.
+ */
+
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
+// Initialize the configuration model
+require_once LTW_PLUGIN_DIR . 'includes/models/model-configgame.php';
+
+class LTW_Admin_Setup {
+
+    /**
+     * Render the main setup page HTML
+     */
+    public function render() {
+
+        $model = new LTW_Model_ConfigGame();
+        $raw   = $model->get_latest_config();
+        $json  = json_decode( $raw, true );
+
+        // Validate configuration data integrity
+        if ( ! is_array( $json ) ) {
+            echo '<div class="notice notice-error"><p>' . esc_html__( 'Invalid configuration JSON detected.', 'lucky-the-wheel' ) . '</p></div>';
+            return;
+        }
+        ?>
+
+        <div id="wrap-game" class="wrap-game">
+
+            <div class="option-left">
+                <div class="config">
+                    <ul>
+                        <li>
+                            <p><?php esc_html_e('Game Mode', 'lucky-the-wheel'); ?></p>
+                            <?php 
+                                // Fetch current mode from global config (Row 0), default to 'weighted'
+                                $current_mode = isset($json[0]['game_mode']) ? $json[0]['game_mode'] : 'weighted'; 
+                            ?>
+                            <select data-row="0" data-key="game_mode" onchange="change_content(this)" style="width:100%; margin-bottom:10px;">
+                                <option value="weighted" <?php selected($current_mode, 'weighted'); ?>>
+                                    <?php esc_html_e('Weighted Probability', 'lucky-the-wheel'); ?>
+                                </option>
+                                <option value="random" <?php selected($current_mode, 'random'); ?>>
+                                    <?php esc_html_e('Pure Random (100%)', 'lucky-the-wheel'); ?>
+                                </option>
+                            </select>
+                            <small style="color:#666;">
+                                * <strong>Weighted:</strong> <?php esc_html_e('Based on the win rate weights entered below.', 'lucky-the-wheel'); ?><br>
+                                * <strong>Random:</strong> <?php esc_html_e('Every segment has an equal chance regardless of probability.', 'lucky-the-wheel'); ?>
+                            </small>
+                        </li>
+
+                    <?php
+                    // Iterate through prize segments (Skip Row 0: Global Config)
+                    foreach ( $json as $row => $item ) {
+                        if ( $row == 0 ) continue;
+
+                        echo '<li><ul>';
+                        foreach ( $item as $key => $val ) {
+                            echo '<li>';
+                            
+                            // Retrieve the localized label for the specific config key
+                            echo '<p>' . LTW_Core::get_config_label( $key ) . '</p>';
+
+                            // --- FIELD RENDERING LOGIC ---
+                            
+                            // Case 1: Standard text inputs for labels and buttons
+                            if ( in_array( $key, [ 'textbut', 'label' ] ) ) {
+                                echo "<input type='text' data-row='{$row}' data-key='{$key}' onchange='change_content(this)' value='" . esc_attr( $val ) . "'>";
+                            } 
+                            // Case 2: Numeric inputs for styling (fonts, positions)
+                            elseif ( in_array( $key, [ 'fontsize', 'textleft', 'texttop', 'sizetextbut' ] ) ) {
+                                echo "<input class='txt' type='text' data-row='{$row}' data-key='{$key}' onchange='change_content(this)' value='" . esc_attr( $val ) . "'>";
+                            }
+                            // Case 3: Win weight input for the probability calculation
+                            elseif ( $key === 'probability' ) {
+                                ?>
+                                <div class="probability-wrapper">
+                                    <input type="number" min="0" max="1000" step="1" 
+                                           class="small-text" 
+                                           style="width: 80px;"
+                                           data-row="<?php echo $row; ?>" 
+                                           data-key="<?php echo $key; ?>" 
+                                           onchange="change_content(this)" 
+                                           value="<?php echo esc_attr( $val ); ?>">
+                                </div>
+                                <?php
+                            } 
+                            // Case 4: Color picker for all other aesthetic settings
+                            else {
+                                echo "<input type='text' class='my-color-field' data-row='{$row}' data-key='{$key}' value='" . esc_attr( $val ) . "'>";
+                            }
+                            
+                            echo '</li>';
+                        }
+                        echo '</ul></li>';
+                    }
+                    ?>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="option-right">
+                <div class="config-bottom">
+                    <ul>
+                        <?php 
+                        // Process Global Config (Row 0)
+                        foreach ( $json[0] as $key => $val ) : 
+                            // Filter out system/internal keys from the UI
+                            if ( in_array( $key, [ 'display_mode', 'display_ids', 'game_mode' ] ) ) continue; 
+                        ?>
+                            <li>
+                                <p><?php echo LTW_Core::get_config_label( $key ); ?></p>
+
+                                <?php if ( in_array( $key, [ 'textbut', 'fontsize', 'sizetextbut' ] ) ) : ?>
+                                    <input type="text" data-row="0" data-key="<?= esc_attr( $key ) ?>" onchange="change_content(this)" value="<?= esc_attr( $val ) ?>">
+                                <?php else : ?>
+                                    <input class="my-color-field" type="text" data-row="0" data-key="<?= esc_attr( $key ) ?>" value="<?= esc_attr( $val ) ?>">
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="preview-game">
+                <div id="area-game"></div>
+            </div>
+
+        </div>
+
+        <?php
+    }
+}
