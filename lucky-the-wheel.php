@@ -3,7 +3,7 @@
  * Plugin Name:       Zuta Lucky Wheel – Spin to Win & Lead Generation
  * Plugin URI:        https://github.com/zutheme/zuta-lucky-wheel
  * Description:       Boost marketing engagement with a physics-based Lucky Wheel. Create interactive spin-to-win campaigns to collect leads, offer rewards, and increase conversions.
- * Version:           1.5.1.2
+ * Version:           1.0.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            zutatheme
@@ -27,7 +27,7 @@ if ( ! defined( 'LTW_PLUGIN_VERSION' ) ) {
         define( 'LTW_PLUGIN_VERSION', time() ); 
     } else {
         // Nếu là bản chạy thật (Production), dùng version cứng
-        define( 'LTW_PLUGIN_VERSION', '1.5.1.2' );
+        define( 'LTW_PLUGIN_VERSION', '1.0.0' );
     }
 }
 
