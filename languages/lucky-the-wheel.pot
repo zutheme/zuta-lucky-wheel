@@ -392,3 +392,6 @@ msgstr ""
 
 msgid "Display Rules"
 msgstr ""
+
+msgid "Game Popup Title"
+msgstr ""

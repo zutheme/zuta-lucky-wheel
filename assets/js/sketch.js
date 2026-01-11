@@ -147,7 +147,7 @@ function setup() {
     if (container) {
         canvas = createCanvas(w_default(), h_default());
         canvas.parent('area-game');
-
+        clear();
         // Always fetch config on startup
         if (!loadconfig) {
             getdatascore(function(data) {
@@ -491,7 +491,7 @@ function start_physics_spin(targetIndex) {
 // ===================== DRAW LOOP (FIXED VOLUME LOGIC) =====================
 function draw() {
     if (!document.getElementById("area-game")) return false;
-
+    clear();
     // --- DECELERATION & AUDIO FADE ---
     if (typeof frameCount !== 'undefined' && frameCount > 100) {
         if (speed < 0.0003) {

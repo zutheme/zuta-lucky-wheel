@@ -100,6 +100,7 @@ class LTW_Frontend {
 
    /**
      * 2. AUTO DISPLAY (POPUP WRAPPER & GIFT TRIGGER)
+     * Updated: Professional Card Style
      */
     public function auto_display_wheel() {
         // 1. Don't show in the WordPress Dashboard
@@ -108,35 +109,67 @@ class LTW_Frontend {
             return;
         }
 
+        // Đảm bảo đường dẫn ảnh chính xác
         $gift_url = LTW_ASSETS_URL . 'images/gift1.png'; 
         
-        // Gift Trigger Container
-        echo '<div id="ltw-gift-trigger" class="ltw-gift-container" style="display:none;">';
-        echo '  <div class="ltw-gift-close">&#10005;</div>'; 
-
-        echo '  <div class="ltw-lucky-text">';
-        echo '      <h3 class="ltw-text-title">' . esc_html__( 'Congratulations!', 'lucky-the-wheel' ) . '</h3>';
+        // --- GIFT TRIGGER CONTAINER (OVERLAY) ---
+        echo '<div id="ltw-gift-trigger" class="ltw-gift-overlay" style="display:none;">';
         
-        // UPDATED: Added span for dynamic spin count
-        echo '      <p class="ltw-text-desc">' . esc_html__( 'You are the lucky one to get', 'lucky-the-wheel' ) . ' <br><strong><span id="ltw-spins-left">1</span> ' . esc_html__( 'FREE SPIN', 'lucky-the-wheel' ) . '</strong> ' . esc_html__( 'today!', 'lucky-the-wheel' ) . '</p>';
-        
-        echo '  </div>';
+            // --- THE WHITE CARD ---
+            echo '<div class="ltw-gift-card">';
+            
+                // Close Button (Inside the card)
+                echo '<div class="ltw-card-close">&#10005;</div>'; 
 
-        echo '  <a href="#lucky_spin_license=0" class="ltw-gift-link">';
-        echo '      <img src="' . esc_url($gift_url) . '" class="ltw-gift-img" alt="Play Game">';
-        echo '  </a>';
+                // 1. Floating Gift Image
+                echo '<div class="ltw-card-img-wrapper">';
+                echo '  <img src="' . esc_url($gift_url) . '" class="ltw-card-img" alt="Gift Box">';
+                echo '</div>';
 
-        echo '  <div class="ltw-click-hint">';
-        echo '      <div class="ltw-arrow-up"></div>';
-        echo '      <span class="ltw-hint-text">' . esc_html__( 'Click here', 'lucky-the-wheel' ) . '</span>';
-        echo '  </div>';
-        echo '</div>';
+                // 2. Title
+                echo '<h3 class="ltw-card-title">' . esc_html__( 'CONGRATULATIONS!', 'lucky-the-wheel' ) . '</h3>';
 
-        // Game Popup Wrapper
+                // 3. Description (Dynamic Spins)
+                echo '<p class="ltw-card-desc">';
+                echo esc_html__( 'You are the lucky one to get', 'lucky-the-wheel' );
+                echo '<br><span class="highlight"><span id="ltw-spins-left">1</span> ' . esc_html__( 'FREE SPINS', 'lucky-the-wheel' ) . '</span>';
+                echo ' ' . esc_html__( 'today!', 'lucky-the-wheel' );
+                echo '</p>';
+
+                // 4. CTA Button (Triggers the wheel via hash)
+                echo '<a href="#lucky_spin_license=0" class="ltw-card-btn">';
+                echo    esc_html__( 'SPIN NOW', 'lucky-the-wheel' );
+                echo '</a>';
+                
+                // 5. Small Note (Optional)
+                echo '<p class="ltw-card-note">' . esc_html__( 'No thanks, I hate winning prizes', 'lucky-the-wheel' ) . '</p>';
+
+            echo '</div>'; // End .ltw-gift-card
+
+        echo '</div>'; // End #ltw-gift-trigger
+
+       // --- GAME POPUP WRAPPER ---
         echo '<div id="ltw-popup-wrapper" style="display:none;">';
-        echo '<div class="ltw-close-game" style="position:absolute; top:20px; right:20px; width:35px; height:35px; background:#fff; border-radius:50%; text-align:center; line-height:35px; cursor:pointer; color:#333; font-weight:bold; font-size:18px; z-index:9999999; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">&#10005;</div>';
-        //echo do_shortcode( '[lucky_spin license="0"]' );
-        echo '<div id="area-game" data-id="0" data-license="0"></div>';
+            
+            // Container bao bọc vòng quay (Cái thẻ trắng)
+            echo '<div class="ltw-game-card">';
+                
+                // Nút đóng (Di chuyển vào trong thẻ)
+                echo '<div class="ltw-close-game">&#10005;</div>';
+                
+                // Tiêu đề game
+                $game_title = get_option( 'ltw_game_title', 'Zuta Lucky Wheel' ); 
+                
+                echo '<h3 class="ltw-game-title">' . esc_html( $game_title ) . '</h3>';
+                
+                // Mũi tên chỉ định (Ticker) - Quan trọng để biết trúng ô nào
+                echo '<div class="ltw-wheel-pointer"></div>';
+
+                // Vòng quay (Canvas)
+                echo '<div id="area-game" data-id="0" data-license="0"></div>';
+
+            echo '</div>'; // End .ltw-game-card
+
         echo '</div>';
     }
 
