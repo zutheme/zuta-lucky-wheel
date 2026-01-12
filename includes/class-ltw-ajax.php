@@ -103,7 +103,7 @@ class LTW_Ajax {
         ));
     }
 
-    // Hàm bổ trợ để lấy số lượt còn lại (để hiển thị lên màn hình sau khi quay)
+    // Helper function to get remaining spins for a device
     private function get_remaining_spins($device_id) {
         global $wpdb;
         return $wpdb->get_var($wpdb->prepare(
@@ -153,21 +153,21 @@ class LTW_Ajax {
                 <form class="form-input">
                     <button type="button" class="btn-close" onclick="close_popup(this)">×</button>
                     <div class="form-group head-congrate">
-                        <h4><?php echo esc_html__( 'Congratulations', 'lucky-the-wheel' ); ?></h4>
-                        <p class="namegif"><?php echo esc_html__( 'You got a gift:', 'lucky-the-wheel' ) . ' ' . esc_html( $gif ); ?></p>
-                        <p><?php echo esc_html__( 'Leave your information, please!', 'lucky-the-wheel' ); ?></p>
+                        <h4><?php echo esc_html__( 'Congratulations', 'zuta-lucky-wheel' ); ?></h4>
+                        <p class="namegif"><?php echo esc_html__( 'You got a gift:', 'zuta-lucky-wheel' ) . ' ' . esc_html( $gif ); ?></p>
+                        <p><?php echo esc_html__( 'Leave your information, please!', 'zuta-lucky-wheel' ); ?></p>
                     </div>
                     <div class="form-group">
-                        <input class="fullname" name="fullname" placeholder="<?php echo esc_attr__( 'Fullname', 'lucky-the-wheel' ); ?>">
+                        <input class="fullname" name="fullname" placeholder="<?php echo esc_attr__( 'Fullname', 'zuta-lucky-wheel' ); ?>">
                     </div>
                     <div class="form-group">
-                        <input class="phone" name="phone" placeholder="<?php echo esc_attr__( 'Phone', 'lucky-the-wheel' ); ?>">
+                        <input class="phone" name="phone" placeholder="<?php echo esc_attr__( 'Phone', 'zuta-lucky-wheel' ); ?>">
                     </div>
                     <div class="form-group">
-                        <input class="email" name="email" placeholder="<?php echo esc_attr__( 'Email', 'lucky-the-wheel' ); ?>">
+                        <input class="email" name="email" placeholder="<?php echo esc_attr__( 'Email', 'zuta-lucky-wheel' ); ?>">
                     </div>
                     <div class="form-group but">
-                        <button type="button" onclick="submit_customer(this)" class="btn btn-primary"><?php echo esc_html__( 'Submit', 'lucky-the-wheel' ); ?></button>
+                        <button type="button" onclick="submit_customer(this)" class="btn btn-primary"><?php echo esc_html__( 'Submit', 'zuta-lucky-wheel' ); ?></button>
                     </div>
                 </form>
             </div>

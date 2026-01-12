@@ -22,7 +22,7 @@ class LTW_Admin_Setup {
 
         // Validate configuration data integrity
         if ( ! is_array( $json ) ) {
-            echo '<div class="notice notice-error"><p>' . esc_html__( 'Invalid configuration JSON detected.', 'lucky-the-wheel' ) . '</p></div>';
+            echo '<div class="notice notice-error"><p>' . esc_html__( 'Invalid configuration JSON detected.', 'zuta-lucky-wheel' ) . '</p></div>';
             return;
         }
         ?>
@@ -33,22 +33,22 @@ class LTW_Admin_Setup {
                 <div class="config">
                     <ul>
                         <li>
-                            <p><?php esc_html_e('Game Mode', 'lucky-the-wheel'); ?></p>
+                            <p><?php esc_html_e('Game Mode', 'zuta-lucky-wheel'); ?></p>
                             <?php 
                                 // Fetch current mode from global config (Row 0), default to 'weighted'
                                 $current_mode = isset($json[0]['game_mode']) ? $json[0]['game_mode'] : 'weighted'; 
                             ?>
                             <select data-row="0" data-key="game_mode" onchange="change_content(this)" style="width:100%; margin-bottom:10px;">
                                 <option value="weighted" <?php selected($current_mode, 'weighted'); ?>>
-                                    <?php esc_html_e('Weighted Probability', 'lucky-the-wheel'); ?>
+                                    <?php esc_html_e('Weighted Probability', 'zuta-lucky-wheel'); ?>
                                 </option>
                                 <option value="random" <?php selected($current_mode, 'random'); ?>>
-                                    <?php esc_html_e('Pure Random (100%)', 'lucky-the-wheel'); ?>
+                                    <?php esc_html_e('Pure Random (100%)', 'zuta-lucky-wheel'); ?>
                                 </option>
                             </select>
                             <small style="color:#666;">
-                                * <strong>Weighted:</strong> <?php esc_html_e('Based on the win rate weights entered below.', 'lucky-the-wheel'); ?><br>
-                                * <strong>Random:</strong> <?php esc_html_e('Every segment has an equal chance regardless of probability.', 'lucky-the-wheel'); ?>
+                                * <strong>Weighted:</strong> <?php esc_html_e('Based on the win rate weights entered below.', 'zuta-lucky-wheel'); ?><br>
+                                * <strong>Random:</strong> <?php esc_html_e('Every segment has an equal chance regardless of probability.', 'zuta-lucky-wheel'); ?>
                             </small>
                         </li>
 

@@ -14,7 +14,7 @@ class LTW_Frontend {
         add_action( 'wp_footer', array( $this, 'loading_markup' ) );
         add_action( 'wp_footer', array( $this, 'popup_notify_markup' ) );
 
-        // --- QUAN TRỌNG: ĐĂNG KÝ AJAX ACTION (Bị thiếu trước đó) ---
+        // --- IMPORTANT: REGISTER AJAX ACTION ---
         add_action( 'wp_ajax_ltw_check_limit', array( $this, 'check_spin_limit_by_ip' ) );
         add_action( 'wp_ajax_nopriv_ltw_check_limit', array( $this, 'check_spin_limit_by_ip' ) );
     }
@@ -72,13 +72,13 @@ class LTW_Frontend {
             'recaptcha_site_key' => $recaptcha_site_key,
             
             'i18n'        => array(
-                'notice_title' => esc_html__( 'Notification', 'lucky-the-wheel' ),
-                'err_name'     => esc_html__( 'Please enter your full name', 'lucky-the-wheel' ),
-                'err_phone'    => esc_html__( 'Please enter your phone number', 'lucky-the-wheel' ),
-                'success'      => esc_html__( 'Congratulations! Information sent successfully!', 'lucky-the-wheel' ),
-                'error'        => esc_html__( 'Error sending information. Please try again!', 'lucky-the-wheel' ),
-                'notice'       => esc_html__( 'Notification', 'lucky-the-wheel' ), 
-                'close'        => esc_html__( 'Close', 'lucky-the-wheel' )
+                'notice_title' => esc_html__( 'Notification', 'zuta-lucky-wheel' ),
+                'err_name'     => esc_html__( 'Please enter your full name', 'zuta-lucky-wheel' ),
+                'err_phone'    => esc_html__( 'Please enter your phone number', 'zuta-lucky-wheel' ),
+                'success'      => esc_html__( 'Congratulations! Information sent successfully!', 'zuta-lucky-wheel' ),
+                'error'        => esc_html__( 'Error sending information. Please try again!', 'zuta-lucky-wheel' ),
+                'notice'       => esc_html__( 'Notification', 'zuta-lucky-wheel' ), 
+                'close'        => esc_html__( 'Close', 'zuta-lucky-wheel' )
             )
         );
 
@@ -109,7 +109,7 @@ class LTW_Frontend {
             return;
         }
 
-        // Đảm bảo đường dẫn ảnh chính xác
+        // Ensure the image path is correct
         $gift_url = LTW_ASSETS_URL . 'images/gift1.png'; 
         
         // --- GIFT TRIGGER CONTAINER (OVERLAY) ---
@@ -127,22 +127,22 @@ class LTW_Frontend {
                 echo '</div>';
 
                 // 2. Title
-                echo '<h3 class="ltw-card-title">' . esc_html__( 'CONGRATULATIONS!', 'lucky-the-wheel' ) . '</h3>';
+                echo '<h3 class="ltw-card-title">' . esc_html__( 'CONGRATULATIONS!', 'zuta-lucky-wheel' ) . '</h3>';
 
                 // 3. Description (Dynamic Spins)
                 echo '<p class="ltw-card-desc">';
-                echo esc_html__( 'You are the lucky one to get', 'lucky-the-wheel' );
-                echo '<br><span class="highlight"><span id="ltw-spins-left">1</span> ' . esc_html__( 'FREE SPINS', 'lucky-the-wheel' ) . '</span>';
-                echo ' ' . esc_html__( 'today!', 'lucky-the-wheel' );
+                echo esc_html__( 'You are the lucky one to get', 'zuta-lucky-wheel' );
+                echo '<br><span class="highlight"><span id="ltw-spins-left">1</span> ' . esc_html__( 'FREE SPINS', 'zuta-lucky-wheel' ) . '</span>';
+                echo ' ' . esc_html__( 'today!', 'zuta-lucky-wheel' );
                 echo '</p>';
 
                 // 4. CTA Button (Triggers the wheel via hash)
                 echo '<a href="#lucky_spin_license=0" class="ltw-card-btn">';
-                echo    esc_html__( 'SPIN NOW', 'lucky-the-wheel' );
+                echo    esc_html__( 'SPIN NOW', 'zuta-lucky-wheel' );
                 echo '</a>';
                 
                 // 5. Small Note (Optional)
-                echo '<p class="ltw-card-note">' . esc_html__( 'No thanks, I hate winning prizes', 'lucky-the-wheel' ) . '</p>';
+                echo '<p class="ltw-card-note">' . esc_html__( 'No thanks, I hate winning prizes', 'zuta-lucky-wheel' ) . '</p>';
 
             echo '</div>'; // End .ltw-gift-card
 
@@ -151,21 +151,21 @@ class LTW_Frontend {
        // --- GAME POPUP WRAPPER ---
         echo '<div id="ltw-popup-wrapper" style="display:none;">';
             
-            // Container bao bọc vòng quay (Cái thẻ trắng)
+            // Wheel Wrapper Container (The white card)
             echo '<div class="ltw-game-card">';
                 
-                // Nút đóng (Di chuyển vào trong thẻ)
+                // Close Button (Moved inside the card)
                 echo '<div class="ltw-close-game">&#10005;</div>';
                 
-                // Tiêu đề game
+                // Game Title
                 $game_title = get_option( 'ltw_game_title', 'Zuta Lucky Wheel' ); 
                 
                 echo '<h3 class="ltw-game-title">' . esc_html( $game_title ) . '</h3>';
                 
-                // Mũi tên chỉ định (Ticker) - Quan trọng để biết trúng ô nào
+                // Indicator Pointer (Ticker) - Essential for identifying the winning segment
                 echo '<div class="ltw-wheel-pointer"></div>';
 
-                // Vòng quay (Canvas)
+                // Wheel Area (Canvas)
                 echo '<div id="area-game" data-id="0" data-license="0"></div>';
 
             echo '</div>'; // End .ltw-game-card
@@ -197,7 +197,7 @@ class LTW_Frontend {
                 <form class="form-input">
                     <button type="button" class="btn-close" onclick="close_notify(this)">x</button>
                     <div class="form-group head-congrate">
-                        <h4 class="notice"><?php echo esc_html__( 'Notification', 'lucky-the-wheel' ); ?></h4>
+                        <h4 class="notice"><?php echo esc_html__( 'Notification', 'zuta-lucky-wheel' ); ?></h4>
                     </div>
                     <div class="form-content" style="padding:15px;text-align:center;">
                         </div>
@@ -253,7 +253,7 @@ class LTW_Frontend {
         // 4. Return result
         if ( $spins_left <= 0 ) {
             wp_send_json_error( array( 
-                'message'    => esc_html__( 'You have reached the maximum limit!', 'lucky-the-wheel' ),
+                'message'    => esc_html__( 'You have reached the maximum limit!', 'zuta-lucky-wheel' ),
                 'spins_left' => 0 
             ) );
         } else {

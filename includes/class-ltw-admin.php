@@ -19,8 +19,8 @@ class LTW_Admin {
     public function add_menu() {
 
         add_menu_page(
-            __( 'Lucky Wheel Settings', 'lucky-the-wheel' ),
-            __( 'Lucky Wheel', 'lucky-the-wheel' ),
+            __( 'Lucky Wheel Settings', 'zuta-lucky-wheel' ),
+            __( 'Lucky Wheel', 'zuta-lucky-wheel' ),
             'manage_options',
             'lucky-wheel-settings',
             array( $this, 'render_admin_page' ),
@@ -32,20 +32,20 @@ class LTW_Admin {
     public function render_admin_page() {
 
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( __( 'You do not have permission to access this page', 'lucky-the-wheel' ) );
+            wp_die( __( 'You do not have permission to access this page', 'zuta-lucky-wheel' ) );
         }
 
         $tab = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : 'setup';
 
-        echo '<div class="wrap"><h1>' . esc_html__( 'Lucky Wheel Settings', 'lucky-the-wheel' ) . '</h1>';
+        echo '<div class="wrap"><h1>' . esc_html__( 'Lucky Wheel Settings', 'zuta-lucky-wheel' ) . '</h1>';
 
         echo '<h2 class="nav-tab-wrapper">';
-        echo '<a href="?page=lucky-wheel-settings&tab=setup" class="nav-tab ' . ( $tab === 'setup' ? 'nav-tab-active' : '' ) . '">' . esc_html__( 'Design Setup', 'lucky-the-wheel' ) . '</a>';
-        echo '<a href="?page=lucky-wheel-settings&tab=display" class="nav-tab ' . ( $tab === 'display' ? 'nav-tab-active' : '' ) . '">' . esc_html__( 'Display Rules', 'lucky-the-wheel' ) . '</a>';
-        echo '<a href="?page=lucky-wheel-settings&tab=trigger" class="nav-tab ' . ( $tab === 'trigger' ? 'nav-tab-active' : '' ) . '">' . esc_html__( 'Manual Trigger', 'lucky-the-wheel' ) . '</a>';
+        echo '<a href="?page=lucky-wheel-settings&tab=setup" class="nav-tab ' . ( $tab === 'setup' ? 'nav-tab-active' : '' ) . '">' . esc_html__( 'Design Setup', 'zuta-lucky-wheel' ) . '</a>';
+        echo '<a href="?page=lucky-wheel-settings&tab=display" class="nav-tab ' . ( $tab === 'display' ? 'nav-tab-active' : '' ) . '">' . esc_html__( 'Display Rules', 'zuta-lucky-wheel' ) . '</a>';
+        echo '<a href="?page=lucky-wheel-settings&tab=trigger" class="nav-tab ' . ( $tab === 'trigger' ? 'nav-tab-active' : '' ) . '">' . esc_html__( 'Manual Trigger', 'zuta-lucky-wheel' ) . '</a>';
 
-        echo '<a href="?page=lucky-wheel-settings&tab=customer" class="nav-tab ' . ( $tab === 'customer' ? 'nav-tab-active' : '' ) . '">' . esc_html__( 'Customers', 'lucky-the-wheel' ) . '</a>';
-        echo '<a href="?page=lucky-wheel-settings&tab=upgrade" class="nav-tab ' . ( $tab === 'upgrade' ? 'nav-tab-active' : '' ) . '">' . esc_html__( 'Upgrade', 'lucky-the-wheel' ) . '</a>';
+        echo '<a href="?page=lucky-wheel-settings&tab=customer" class="nav-tab ' . ( $tab === 'customer' ? 'nav-tab-active' : '' ) . '">' . esc_html__( 'Customers', 'zuta-lucky-wheel' ) . '</a>';
+        echo '<a href="?page=lucky-wheel-settings&tab=upgrade" class="nav-tab ' . ( $tab === 'upgrade' ? 'nav-tab-active' : '' ) . '">' . esc_html__( 'Upgrade', 'zuta-lucky-wheel' ) . '</a>';
         echo '</h2>';
 
         $admin_base = LTW_PLUGIN_DIR . 'includes/admin/';
@@ -66,7 +66,7 @@ class LTW_Admin {
                     $mod = new LTW_Admin_Display();
                     $mod->render();
                 } else {
-                    echo '<p>' . esc_html__( 'File class-ltw-admin-display.php not found.', 'lucky-the-wheel' ) . '</p>';
+                    echo '<p>' . esc_html__( 'File class-ltw-admin-display.php not found.', 'zuta-lucky-wheel' ) . '</p>';
                 }
                 break;
             case 'trigger':
@@ -85,7 +85,7 @@ class LTW_Admin {
                 break;
 
             default:
-                echo '<p>' . esc_html__( 'Unknown tab', 'lucky-the-wheel' ) . '</p>';
+                echo '<p>' . esc_html__( 'Unknown tab', 'zuta-lucky-wheel' ) . '</p>';
         }
 
         echo '</div>';
@@ -168,33 +168,33 @@ class LTW_Admin {
     private function render_trigger_guide() {
         ?>
         <div class="card" style="max-width: 100%; margin-top: 20px;">
-            <h2><?php esc_html_e( 'Manual Trigger Guide', 'lucky-the-wheel' ); ?></h2>
-            <p><?php esc_html_e( 'By default, the wheel can be managed via the "Display Rules" tab. However, if you want to trigger the wheel popup manually from a specific button, image, or menu item, use the link hash below:', 'lucky-the-wheel' ); ?></p>
+            <h2><?php esc_html_e( 'Manual Trigger Guide', 'zuta-lucky-wheel' ); ?></h2>
+            <p><?php esc_html_e( 'By default, the wheel can be managed via the "Display Rules" tab. However, if you want to trigger the wheel popup manually from a specific button, image, or menu item, use the link hash below:', 'zuta-lucky-wheel' ); ?></p>
             
             <div style="background:#f0f0f1; padding:20px; border-radius:4px; border:1px dashed #ccc; margin: 20px 0;">
                 <code style="font-size: 1.5em; color: #d63638; user-select:all;">#lucky_spin_license=0</code>
             </div>
 
-            <h3><?php esc_html_e( 'Usage Examples:', 'lucky-the-wheel' ); ?></h3>
+            <h3><?php esc_html_e( 'Usage Examples:', 'zuta-lucky-wheel' ); ?></h3>
             <table class="widefat fixed" cellspacing="0" style="margin-top: 10px;">
                 <thead>
                     <tr>
-                        <th><?php esc_html_e( 'Element Type', 'lucky-the-wheel' ); ?></th>
-                        <th><?php esc_html_e( 'How to Implement', 'lucky-the-wheel' ); ?></th>
+                        <th><?php esc_html_e( 'Element Type', 'zuta-lucky-wheel' ); ?></th>
+                        <th><?php esc_html_e( 'How to Implement', 'zuta-lucky-wheel' ); ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong><?php esc_html_e( 'Button or Link', 'lucky-the-wheel' ); ?></strong></td>
+                        <td><strong><?php esc_html_e( 'Button or Link', 'zuta-lucky-wheel' ); ?></strong></td>
                         <td><code>&lt;a href="#lucky_spin_license=0" class="my-button"&gt; Spin Now &lt;/a&gt;</code></td>
                     </tr>
                     <tr>
-                        <td><strong><?php esc_html_e( 'Image Click', 'lucky-the-wheel' ); ?></strong></td>
+                        <td><strong><?php esc_html_e( 'Image Click', 'zuta-lucky-wheel' ); ?></strong></td>
                         <td><code>&lt;a href="#lucky_spin_license=0"&gt; &lt;img src="banner.jpg" /&gt; &lt;/a&gt;</code></td>
                     </tr>
                     <tr>
-                        <td><strong><?php esc_html_e( 'Navigation Menu', 'lucky-the-wheel' ); ?></strong></td>
-                        <td><?php esc_html_e( 'Go to Appearance > Menus. Create a "Custom Link" and set the URL to #lucky_spin_license=0', 'lucky-the-wheel' ); ?></td>
+                        <td><strong><?php esc_html_e( 'Navigation Menu', 'zuta-lucky-wheel' ); ?></strong></td>
+                        <td><?php esc_html_e( 'Go to Appearance > Menus. Create a "Custom Link" and set the URL to #lucky_spin_license=0', 'zuta-lucky-wheel' ); ?></td>
                     </tr>
                 </tbody>
             </table>

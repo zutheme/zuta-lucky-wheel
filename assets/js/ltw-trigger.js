@@ -256,7 +256,7 @@ jQuery(document).ready(function($) {
         fireworkInterval = setInterval(createFirework, 600);
     }
 });
-// Cập nhật selector để bắt sự kiện click nút đóng mới
+
 jQuery(document).on('click', '.ltw-card-close, .ltw-card-note', function() {
     jQuery('#ltw-gift-trigger').fadeOut();
 });

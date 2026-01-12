@@ -10,6 +10,7 @@
  * Author URI:        https://github.com/zutheme
  * Text Domain:       zuta-lucky-wheel
  * Domain Path:       /languages
+ * License:           GPLv2 or later
  */
 
 // Prevent direct access to the file
@@ -20,13 +21,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 /* -------------------------------------------------------------------------
  * CONSTANTS
  * ------------------------------------------------------------------------- */
-/* Safe constants */
 if ( ! defined( 'LTW_PLUGIN_VERSION' ) ) {
-    // Nếu đang bật chế độ Debug (Dev), dùng time() để cache busting
+    // If WP_DEBUG is enabled, use time() for cache busting during development
     if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
         define( 'LTW_PLUGIN_VERSION', time() ); 
     } else {
-        // Nếu là bản chạy thật (Production), dùng version cứng
+        // Use static version for production releases
         define( 'LTW_PLUGIN_VERSION', '1.0.0' );
     }
 }
@@ -47,30 +47,26 @@ if ( ! defined( 'LTW_ASSETS_URL' ) ) {
  * LOAD TEXT DOMAIN
  * ------------------------------------------------------------------------- */
 function ltw_load_textdomain() {
-    load_plugin_textdomain( 'lucky-the-wheel', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+    load_plugin_textdomain( 'zuta-lucky-wheel', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 }
 add_action( 'plugins_loaded', 'ltw_load_textdomain' );
 
 /* -------------------------------------------------------------------------
  * ACTIVATION HOOK
- * Runs when the user clicks "Activate" plugin
  * ------------------------------------------------------------------------- */
 register_activation_hook( __FILE__, 'ltw_run_activation_hook' );
 
 function ltw_run_activation_hook() {
-    // Ensure the database class file is loaded
+    // Ensure the database class file is loaded for table creation
     if ( ! class_exists( 'LTW_Database' ) ) {
         require_once LTW_PLUGIN_DIR . 'includes/class-ltw-database.php';
     }
 
-    // Initialize the class and run table creation methods
     $db = new LTW_Database();
     
-    // Create config table (wp_configgames)
-    $db->create_config();
-    
-    // Create customer table (wp_customers)
-    $db->create_customer();
+    // Create necessary database tables
+    $db->create_config();   // Table: wp_configgames
+    $db->create_customer(); // Table: wp_customers
 }
 
 /* -------------------------------------------------------------------------
@@ -85,18 +81,18 @@ require_once LTW_PLUGIN_DIR . 'includes/class-ltw-shortcode.php';
 require_once LTW_PLUGIN_DIR . 'includes/models/model-customer.php';
 require_once LTW_PLUGIN_DIR . 'includes/admin/admin-customers.php';
 
-// KHỞI TẠO CLASS SỚM ĐỂ BẮT HOOK EXPORT
+/* -------------------------------------------------------------------------
+ * INITIALIZE ADMIN FEATURES
+ * ------------------------------------------------------------------------- */
 function ltw_init_admin_features() {
-    // Chỉ khởi tạo trong trang admin để tối ưu
     if ( is_admin() ) {
-        // Gọi class này ngay để nó đăng ký hook 'admin_init' -> 'handle_csv_export'
         new LTW_Admin_Customers(); 
     }
 }
-// Dùng hook plugins_loaded để đảm bảo mọi file đã được include
 add_action( 'plugins_loaded', 'ltw_init_admin_features' );
+
 /* -------------------------------------------------------------------------
- * INITIALIZE
+ * INITIALIZE CORE INSTANCE
  * ------------------------------------------------------------------------- */
 add_action( 'plugins_loaded', function() {
     if ( class_exists( 'LTW_Core' ) ) {

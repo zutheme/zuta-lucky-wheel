@@ -20,10 +20,6 @@ class LTW_Core {
         $models_dir = LTW_PLUGIN_DIR . 'includes/models/';
         require_once $models_dir . 'model-configgame.php';
         require_once $models_dir . 'model-customer.php';
-        // Load models first (new location)
-        $models_dir = LTW_PLUGIN_DIR . 'includes/models/';
-        require_once $models_dir . 'model-configgame.php';
-        require_once $models_dir . 'model-customer.php';
 
         // Initialize database helper
         $this->database = new LTW_Database();
@@ -57,14 +53,14 @@ class LTW_Core {
         return self::$instance;
     }
 
-   // File: includes/class-ltw-core.php
+    // File: includes/class-ltw-core.php
 
     public static function get_winning_result( $config ) {
         $game_mode = isset($config[0]['game_mode']) ? $config[0]['game_mode'] : 'weighted';
         $items = [];
         foreach ($config as $key => $val) {
             if ($key == 0) continue;
-            $val['original_index'] = $key - 1; // Khớp với JS
+            $val['original_index'] = $key - 1; // Sync with JS index
             $items[] = $val;
         }
 
@@ -75,7 +71,7 @@ class LTW_Core {
         // --- WEIGHTED LOGIC ---
         $total_weight = 0;
         foreach ($items as $item) {
-            // Đảm bảo lấy đúng giá trị số, mặc định là 0 nếu không tồn tại
+            // Ensure numeric value is retrieved, default to 0 if not exists
             $weight = isset($item['probability']) ? (int)$item['probability'] : 0;
             $total_weight += $weight;
         }
@@ -87,7 +83,7 @@ class LTW_Core {
         $rand = mt_rand(1, $total_weight);
         foreach ($items as $item) {
             $weight = (int)$item['probability'];
-            if ($weight <= 0) continue; // Bỏ qua ô có xác suất bằng 0 hoàn toàn
+            if ($weight <= 0) continue; // Skip segments with 0 probability
 
             $rand -= $weight;
             if ($rand <= 0) {
@@ -97,55 +93,59 @@ class LTW_Core {
 
         return $items[0];
     }
+
     /**
-     * Hàm lấy nhãn dịch dựa trên key cấu hình
+     * Helper to get translated label based on config key
      */
     public static function get_config_label( $key ) {
         switch ( $key ) {
-            // Nhóm Text
+            // Text Group
             case 'label':
-                return esc_html__( 'Label', 'lucky-the-wheel' ); // Dịch: Nhãn
+                return esc_html__( 'Label', 'zuta-lucky-wheel' ); 
             case 'textbut':
-                return esc_html__( 'Button Text', 'lucky-the-wheel' ); // Dịch: Chữ trên nút
+                return esc_html__( 'Button Text', 'zuta-lucky-wheel' ); 
             case 'fontsize':
-                return esc_html__( 'Font Size', 'lucky-the-wheel' ); // Dịch: Cỡ chữ
+                return esc_html__( 'Font Size', 'zuta-lucky-wheel' ); 
             case 'sizetextbut':
-                return esc_html__( 'Button Text Size', 'lucky-the-wheel' );
+                return esc_html__( 'Button Text Size', 'zuta-lucky-wheel' );
             case 'textleft':
-                return esc_html__( 'Position Left', 'lucky-the-wheel' );
+                return esc_html__( 'Position Left', 'zuta-lucky-wheel' );
             case 'texttop':
-                return esc_html__( 'Position Top', 'lucky-the-wheel' );
+                return esc_html__( 'Position Top', 'zuta-lucky-wheel' );
 
-            // Nhóm Màu sắc & Giao diện
+            // Color & Interface Group
             case 'colorodd':
-                return esc_html__( 'Odd Segment Color', 'lucky-the-wheel' ); // Dịch: Màu ô lẻ
+                return esc_html__( 'Odd Segment Color', 'zuta-lucky-wheel' ); 
             case 'coloreven':
-                return esc_html__( 'Even Segment Color', 'lucky-the-wheel' ); // Dịch: Màu ô chẵn
+                return esc_html__( 'Even Segment Color', 'zuta-lucky-wheel' ); 
             case 'backgroundodd':
-                return esc_html__( 'Odd Background', 'lucky-the-wheel' );
+                return esc_html__( 'Odd Background', 'zuta-lucky-wheel' );
             case 'backgroundeven':
-                return esc_html__( 'Even Background', 'lucky-the-wheel' );
+                return esc_html__( 'Even Background', 'zuta-lucky-wheel' );
             case 'colwin':
-                return esc_html__( 'Pointer Color', 'lucky-the-wheel' );
+                return esc_html__( 'Pointer Color', 'zuta-lucky-wheel' );
             case 'coltextwin':
-                return esc_html__( 'Pointer Text Color', 'lucky-the-wheel' );
+                return esc_html__( 'Pointer Text Color', 'zuta-lucky-wheel' );
             case 'colbut':
-                return esc_html__( 'Button Color', 'lucky-the-wheel' );
+                return esc_html__( 'Button Color', 'zuta-lucky-wheel' );
             case 'coltextbut':
-                return esc_html__( 'Button Text Color', 'lucky-the-wheel' );
+                return esc_html__( 'Button Text Color', 'zuta-lucky-wheel' );
             case 'colbutpress':
-                return esc_html__( 'Button Press Color', 'lucky-the-wheel' );
+                return esc_html__( 'Button Press Color', 'zuta-lucky-wheel' );
             case 'coltextpress':
-                return esc_html__( 'Button Press Text Color', 'lucky-the-wheel' );
-            // Nhóm Tên phần thưởng (Ví dụ)
+                return esc_html__( 'Button Press Text Color', 'zuta-lucky-wheel' );
+
+            // Prize Names Group (Example)
             case 'mobile':
-                return esc_html__( 'Mobile', 'lucky-the-wheel' );
+                return esc_html__( 'Mobile', 'zuta-lucky-wheel' );
             case 'laptop':
-                return esc_html__( 'Laptop', 'lucky-the-wheel' );
+                return esc_html__( 'Laptop', 'zuta-lucky-wheel' );
+            
             // NEW: Label for Probability
             case 'probability':
-                return esc_html__( 'Win Rate (%)', 'lucky-the-wheel' ); //
-            // Mặc định: Nếu key không nằm trong danh sách trên thì hiển thị chính nó
+                return esc_html__( 'Win Rate (%)', 'zuta-lucky-wheel' ); 
+            
+            // Default: If key is not in the list above, display it as is
             default:
                 return esc_html( ucfirst( $key ) ); 
         }

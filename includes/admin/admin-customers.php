@@ -11,23 +11,24 @@ class LTW_Admin_Customers {
     }
 
     /**
-     * 1. HÀM XỬ LÝ XUẤT FILE CSV (ĐÃ CẬP NHẬT LỌC NGÀY)
+     * 1. HANDLE CSV EXPORT (UPDATED WITH DATE FILTER)
      */
     public function handle_csv_export() {
         if ( isset( $_GET['action'] ) && $_GET['action'] === 'ltw_export_customers' ) {
             
             if ( ! current_user_can( 'manage_options' ) ) return;
 
-            // Lấy tham số lọc từ URL
+            // Get filter parameters from URL
             $start_date = isset($_GET['start_date']) ? sanitize_text_field($_GET['start_date']) : '';
             $end_date   = isset($_GET['end_date'])   ? sanitize_text_field($_GET['end_date'])   : '';
 
             if ( ob_get_length() ) ob_end_clean();
 
-            // Gọi Model với tham số ngày
+            // Call Model with date parameters
             $rows = $this->model->get_all_customers($start_date, $end_date);
             
-            $filename = 'danh-sach-khach-hang-' . date('Y-m-d_H-i') . '.csv';
+            // Updated filename to English
+            $filename = 'customer-list-' . date('Y-m-d_H-i') . '.csv';
 
             header( 'Content-Type: text/csv; charset=utf-8' );
             header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
@@ -35,7 +36,7 @@ class LTW_Admin_Customers {
             header( 'Expires: 0' );
 
             $output = fopen( 'php://output', 'w' );
-            fputs( $output, "\xEF\xBB\xBF" ); 
+            fputs( $output, "\xEF\xBB\xBF" ); // Add BOM for Excel compatibility
 
             fputcsv( $output, array( 'Full Name', 'Phone', 'Email', 'Gift Won', 'Date Joined' ) );
 
@@ -60,15 +61,15 @@ class LTW_Admin_Customers {
     }
 
     public function render() {
-        // --- 1. LẤY THAM SỐ LỌC ---
+        // --- 1. GET FILTER PARAMETERS ---
         $start_date = isset($_GET['start_date']) ? sanitize_text_field($_GET['start_date']) : '';
         $end_date   = isset($_GET['end_date'])   ? sanitize_text_field($_GET['end_date'])   : '';
 
-        // --- 2. LẤY DỮ LIỆU TỪ MODEL (CÓ LỌC) ---
+        // --- 2. FETCH DATA FROM MODEL (WITH FILTER) ---
         $all_rows = $this->model->get_all_customers($start_date, $end_date);
         if (!is_array($all_rows)) { $all_rows = []; }
 
-        // --- 3. PHÂN TRANG ---
+        // --- 3. PAGINATION ---
         $total_items = count($all_rows);
         $items_per_page = 20; 
         $current_page = isset($_GET['paged']) ? absint($_GET['paged']) : 1;
@@ -91,7 +92,7 @@ class LTW_Admin_Customers {
             }
             .ltw-pagination .page-numbers.current { background: #0073aa; color: #fff; border-color: #0073aa; }
             
-            /* Style cho thanh công cụ lọc */
+            /* Filter Bar Styles */
             .ltw-filter-bar {
                 background: #fff; padding: 15px; margin: 20px 0;
                 border: 1px solid #ccd0d4; border-left: 4px solid #2271b1;
@@ -109,7 +110,7 @@ class LTW_Admin_Customers {
         </style>
 
         <div class="wrap ltw-admin-section">
-            <h1 class="wp-heading-inline"><?php esc_html_e( 'Customers List', 'lucky-the-wheel' ); ?></h1>
+            <h1 class="wp-heading-inline"><?php esc_html_e( 'Customers List', 'zuta-lucky-wheel' ); ?></h1>
             <hr class="wp-header-end">
             
             <form method="get">
@@ -120,7 +121,7 @@ class LTW_Admin_Customers {
 
                 <div class="ltw-filter-bar">
                     <div class="ltw-filter-group">
-                        <label><strong><?php esc_html_e('Filter Date:', 'lucky-the-wheel'); ?></strong></label>
+                        <label><strong><?php esc_html_e('Filter Date:', 'zuta-lucky-wheel'); ?></strong></label>
                         
                         <input type="date" name="start_date" value="<?php echo esc_attr($start_date); ?>" placeholder="Start Date">
                         <span>to</span>
@@ -137,7 +138,7 @@ class LTW_Admin_Customers {
 
                     <div class="ltw-actions">
                         <?php 
-                            // Tạo link Export kèm theo tham số ngày tháng hiện tại
+                            // Create Export link with current date parameters
                             $export_args = array( 
                                 'action' => 'ltw_export_customers',
                                 'start_date' => $start_date,
@@ -157,11 +158,11 @@ class LTW_Admin_Customers {
                     <thead>
                         <tr>
                             <th style="width: 50px;">ID</th>
-                            <th><?php esc_html_e('Fullname','lucky-the-wheel');?></th>
-                            <th><?php esc_html_e('Phone','lucky-the-wheel');?></th>
-                            <th><?php esc_html_e('Email','lucky-the-wheel');?></th>
-                            <th><?php esc_html_e('Gift Won','lucky-the-wheel');?></th>
-                            <th><?php esc_html_e('Date','lucky-the-wheel');?></th>
+                            <th><?php esc_html_e('Fullname','zuta-lucky-wheel');?></th>
+                            <th><?php esc_html_e('Phone','zuta-lucky-wheel');?></th>
+                            <th><?php esc_html_e('Email','zuta-lucky-wheel');?></th>
+                            <th><?php esc_html_e('Gift Won','zuta-lucky-wheel');?></th>
+                            <th><?php esc_html_e('Date','zuta-lucky-wheel');?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -177,7 +178,7 @@ class LTW_Admin_Customers {
                             <td><?php echo esc_html( isset($r['created_at']) ? $r['created_at'] : (isset($r['datecreate']) ? $r['datecreate'] : '') ); ?></td>
                         </tr>
                     <?php endforeach; else : ?>
-                        <tr><td colspan="6" style="text-align:center; padding: 20px;"><?php esc_html_e( 'No customers found for this period.', 'lucky-the-wheel' ); ?></td></tr>
+                        <tr><td colspan="6" style="text-align:center; padding: 20px;"><?php esc_html_e( 'No customers found for this period.', 'zuta-lucky-wheel' ); ?></td></tr>
                     <?php endif; ?>
                     </tbody>
                 </table>
@@ -191,7 +192,7 @@ class LTW_Admin_Customers {
     private function display_pagination($total_pages, $current_page) {
         if ($total_pages <= 1) return;
         
-        // QUAN TRỌNG: Giữ lại các tham số filter khi chuyển trang
+        // IMPORTANT: Preserve filter parameters during pagination
         $page_links = paginate_links( array(
             'base' => add_query_arg( 'paged', '%#%' ),
             'format' => '',

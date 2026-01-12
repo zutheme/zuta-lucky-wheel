@@ -1,69 +1,80 @@
 === Zuta Lucky Wheel – Spin to Win & Lead Generation ===
-Contributors: zutatheme
-Tags: lucky wheel, spin to win, lead generation, marketing, rewards, gamification, popup, giveaways, wheel of fortune, interactive
+Contributors: hatazuwp
+Tags: lucky wheel, spin to win, popup, marketing, woocommerce
 Requires at least: 5.8
-Tested up to: 6.4
-Requires PHP: 7.4
+Tested up to: 6.7
 Stable tag: 1.0.0
+Requires PHP: 7.4
 License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Boost your website's marketing engagement with a realistic, physics-based Lucky Wheel. Collect leads, offer rewards, and increase conversions with interactive spin-to-win campaigns.
+Turn visitors into subscribers with a professional, realistic Lucky Wheel popup. Capture leads and boost engagement with gamification.
 
 == Description ==
 
-**Zuta Lucky Wheel** is a lightweight, high-performance marketing tool designed to turn visitors into leads through gamification. Unlike other basic spinners, Zuta Lucky Wheel uses a realistic physics engine (Matter.js) to provide a smooth and professional user experience.
+**Zuta Lucky Wheel** is a powerful marketing tool designed to turn visitors into subscribers and customers. It adds a "Spin to Win" wheel popup to your WordPress site, allowing users to enter their information for a chance to win prizes such as coupons, discounts, or free gifts.
 
-Whether you want to offer discount codes, free gifts, or simply engage your audience, this plugin provides all the tools you need to manage rewards and collect customer data securely on your server.
+Unlike other heavy plugins, **Zuta Lucky Wheel** is optimized for performance, using **Matter.js** and **p5.js** for smooth, realistic physics animations without slowing down your site.
 
-### Key Features:
-* **Realistic Physics Engine:** Powered by Matter.js and p5.js for a natural and exciting spinning experience.
-* **Weighted Probability:** Take full control of your rewards. Set specific win rates for each prize to manage your inventory effectively.
-* **Lead Generation Ready:** Built-in customer data collection (Name, Email, Phone) stored directly in your WordPress database.
-* **Device-Based Spin Limits:** Prevent abuse with advanced tracking that limits spins per device/IP.
-* **Speed Optimized:** Assets only load when the wheel is triggered, ensuring your site remains fast.
-* **Manual Triggering:** Launch the wheel popup from any menu item, button, or image using a simple link hash (`#lucky_spin_license=0`).
-* **Fully Customizable:** Easily change colors, font sizes, prize labels, and button styles to match your brand.
-* **Secure AJAX Processing:** All winning calculations happen on the server to prevent front-end manipulation.
+### 🚀 Key Features
+
+* **Realistic Physics:** Smooth spinning animation based on real physics (Matter.js engine).
+* **Fully Customizable Design:**
+    * Change colors for every slice (background, text).
+    * Customize the spin button and popup background.
+    * Edit the "Gift Box" trigger icon and winning messages.
+* **Flexible Winning Logic:**
+    * **Weighted Probability:** Control exactly how often each prize is won (e.g., Prize A: 10%, Prize B: 0.1%).
+    * **Random Mode:** Let fate decide with pure 100% random outcomes.
+* **Security & Anti-Cheat:**
+    * **Google reCAPTCHA v3 Integration:** Protect your wheel from bots and spam without annoying user challenges.
+    * **Smart Limits:** Limit spins per device/IP address.
+    * **Reset Interval:** Allow users to spin again after X days.
+* **Data Collection:** Capture customer names, emails, and phone numbers before they spin.
+* **Mobile Friendly:** 100% responsive design that looks great on iPhone, Android, and Tablets.
+* **Lightweight:** Assets are loaded only when needed to keep your site fast.
+
+== Third-Party Software ==
+
+This plugin utilizes the following third-party libraries:
+
+* **p5.js** - https://p5js.org/
+  License: LGPL 2.1 (https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html)
+  Purpose: High-performance canvas rendering and graphics.
+
+* **Matter.js** - https://brm.io/matter-js/
+  License: MIT (https://opensource.org/licenses/MIT)
+  Purpose: 2D rigid body physics engine for realistic spin effects.
+
+* **FingerprintJS** - https://fingerprint.com/
+  License: MIT (https://opensource.org/licenses/MIT)
+  Purpose: Device identification to prevent fraudulent spins and limit participation.
 
 == Installation ==
 
-1.  Upload the `zuta-lucky-wheel` folder to the `/wp-content/plugins/` directory.
-2.  Activate the plugin through the 'Plugins' menu in WordPress.
-3.  Navigate to **Lucky Wheel > Design Setup** to customize your wheel.
-4.  Configure your display rules or use the manual trigger link to start engaging your visitors.
+1. Upload the `lucky-the-wheel` folder to the `/wp-content/plugins/` directory.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Go to **Lucky Wheel** in the admin sidebar to configure your prizes and design.
+4. (Optional) Go to **Display Rules** to set up reCAPTCHA keys and spin limits.
 
 == Frequently Asked Questions ==
 
-= Can I set different win rates for each prize? =
-Yes! In the Design Setup tab, you can choose "Weighted Probability" mode and enter a "Weight" for each segment. Higher numbers increase the chance of winning that specific prize.
+= How do I change the winning probability? =
+Go to **Lucky Wheel > Design Setup**. Next to each prize slice, you will see a "Probability" field. Enter a number (weight). The higher the number compared to others, the higher the chance of winning.
 
-= How do I open the wheel via a button? =
-Simply set the URL of your button or link to `#lucky_spin_license=0`. The plugin will automatically detect this and open the popup.
+= Can I limit how many times a user can spin? =
+Yes. Go to **Lucky Wheel > Display Rules**. You can set "Max Spins per Device" and the "Reset Limit After (Days)".
 
-= Is it mobile-friendly? =
-Absolutely. The wheel is responsive and works perfectly on smartphones and tablets.
+= Does this plugin support Google reCAPTCHA? =
+Yes. We support Google reCAPTCHA v3 (invisible). You just need to enter your Site Key and Secret Key in the **Display Rules** tab.
 
 == Screenshots ==
 
-1. The interactive physics-based lucky wheel in action.
-2. Admin Design Setup: Easily customize colors, segments, and win rates.
-3. Customer Dashboard: View and manage leads collected from the wheel.
+1. **Frontend Interface:** The engaging Lucky Wheel popup appearing on the website with a realistic spinning effect.
+2. **Design Setup:** Easily customize colors, labels, and probability for each wheel segment in the Admin Dashboard.
+3. **Display Rules:** Configure popup delay, spin limits, and Google reCAPTCHA v3 security settings.
 
 == Changelog ==
 
 = 1.0.0 =
-* Refactored plugin structure for better performance.
-* Added "Weighted Probability" and "Pure Random" game modes.
-* Enhanced security with server-side spin calculations.
-* Integrated device-based spin limiting.
-* Added Manual Trigger functionality.
-
-== Upgrade to Pro ==
-
-Looking for more power? The Pro version (coming soon) will include:
-* Multi-Campaign Management.
-* Unique Phone Number Validation.
-* Advanced Referral & Referrer Tracking.
-* Professional Design Templates.
-* Export Customer Data to CSV.
+* Initial release.

@@ -48,7 +48,7 @@ class LTW_Admin_Display {
                 update_option( 'ltw_recaptcha_secret_key', sanitize_text_field( $_POST['ltw_recaptcha_secret_key'] ) );
             }
 
-            echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Settings saved.', 'lucky-the-wheel' ) . '</p></div>';
+            echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Settings saved.', 'zuta-lucky-wheel' ) . '</p></div>';
         }
 
         // --- 3. LẤY GIÁ TRỊ HIỆN TẠI (MẶC ĐỊNH LÀ "Zuta Lucky Wheel") ---
@@ -62,38 +62,38 @@ class LTW_Admin_Display {
         $secret_key = get_option( 'ltw_recaptcha_secret_key', '' );
         ?>
         <div class="ltw-admin-display-wrap" style="padding: 20px; background: #fff; border: 1px solid #ccd0d4; margin-top: 20px; max-width: 600px;">
-            <h3><?php echo esc_html__( 'Popup Display Settings', 'lucky-the-wheel' ); ?></h3>
+            <h3><?php echo esc_html__( 'Popup Display Settings', 'zuta-lucky-wheel' ); ?></h3>
             
             <form method="post" action="">
                 <?php wp_nonce_field( 'ltw_save_display_nonce' ); ?>
                 
                 <table class="form-table">
                     <tr valign="top">
-                        <th scope="row"><label for="ltw_game_title"><?php echo esc_html__( 'Game Popup Title', 'lucky-the-wheel' ); ?></label></th>
+                        <th scope="row"><label for="ltw_game_title"><?php echo esc_html__( 'Game Popup Title', 'zuta-lucky-wheel' ); ?></label></th>
                         <td>
                             <input type="text" id="ltw_game_title" name="ltw_game_title" value="<?php echo esc_attr( $current_title ); ?>" class="regular-text" />
-                            <p class="description"><?php echo esc_html__( 'This title appears at the top of the spinning wheel popup.', 'lucky-the-wheel' ); ?></p>
+                            <p class="description"><?php echo esc_html__( 'This title appears at the top of the spinning wheel popup.', 'zuta-lucky-wheel' ); ?></p>
                         </td>
                     </tr>
 
                     <tr valign="top">
-                        <th scope="row"><label for="ltw_popup_delay"><?php echo esc_html__( 'Popup Delay (seconds)', 'lucky-the-wheel' ); ?></label></th>
+                        <th scope="row"><label for="ltw_popup_delay"><?php echo esc_html__( 'Popup Delay (seconds)', 'zuta-lucky-wheel' ); ?></label></th>
                         <td>
                             <input type="number" id="ltw_popup_delay" name="ltw_popup_delay" value="<?php echo esc_attr( $current_delay ); ?>" class="regular-text" min="0" />
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><label for="ltw_max_spins"><?php echo esc_html__( 'Max Spins per Device', 'lucky-the-wheel' ); ?></label></th>
+                        <th scope="row"><label for="ltw_max_spins"><?php echo esc_html__( 'Max Spins per Device', 'zuta-lucky-wheel' ); ?></label></th>
                         <td>
                             <input type="number" id="ltw_max_spins" name="ltw_max_spins" value="<?php echo esc_attr( $current_max_spins ); ?>" class="regular-text" min="1" />
                         </td>
                     </tr>
                     
                     <tr valign="top">
-                        <th scope="row"><label for="ltw_reset_days"><?php echo esc_html__( 'Reset Limit After (Days)', 'lucky-the-wheel' ); ?></label></th>
+                        <th scope="row"><label for="ltw_reset_days"><?php echo esc_html__( 'Reset Limit After (Days)', 'zuta-lucky-wheel' ); ?></label></th>
                         <td>
                             <input type="number" id="ltw_reset_days" name="ltw_reset_days" value="<?php echo esc_attr( $current_reset_days ); ?>" class="regular-text" min="1" />
-                            <p class="description"><?php echo esc_html__( 'How many days before the user can spin again? Default is 1 day.', 'lucky-the-wheel' ); ?></p>
+                            <p class="description"><?php echo esc_html__( 'How many days before the user can spin again? Default is 1 day.', 'zuta-lucky-wheel' ); ?></p>
                         </td>
                     </tr>
                     
@@ -116,7 +116,7 @@ class LTW_Admin_Display {
                 </table>
                 
                 <p class="submit">
-                    <input type="submit" name="ltw_save_display" id="submit" class="button button-primary" value="<?php echo esc_attr__( 'Save Changes', 'lucky-the-wheel' ); ?>">
+                    <input type="submit" name="ltw_save_display" id="submit" class="button button-primary" value="<?php echo esc_attr__( 'Save Changes', 'zuta-lucky-wheel' ); ?>">
                 </p>
             </form>
         </div>
