@@ -1,210 +1,239 @@
 <?php
+/**
+ * LTW Admin Customers Class
+ * Handles the display and export of customer data in the admin dashboard.
+ */
+
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 class LTW_Admin_Customers {
-
     protected $model;
 
+    /**
+     * Constructor: Initializes the model and hooks into admin_init.
+     */
     public function __construct() {
         $this->model = new LTW_Model_Customer();
         add_action( 'admin_init', array( $this, 'handle_csv_export' ) );
     }
 
     /**
-     * 1. HANDLE CSV EXPORT (UPDATED WITH DATE FILTER)
+     * Handles the CSV export action with security checks.
      */
     public function handle_csv_export() {
-        if ( isset( $_GET['action'] ) && $_GET['action'] === 'ltw_export_customers' ) {
-            
-            if ( ! current_user_can( 'manage_options' ) ) return;
+        if ( ! isset( $_GET['action'] ) || $_GET['action'] !== 'ltw_export_customers' ) {
+            return;
+        }
 
-            // Get filter parameters from URL
-            $start_date = isset($_GET['start_date']) ? sanitize_text_field($_GET['start_date']) : '';
-            $end_date   = isset($_GET['end_date'])   ? sanitize_text_field($_GET['end_date'])   : '';
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You do not have permission to export this data.', 'zuta-lucky-wheel' ) );
+        }
 
-            if ( ob_get_length() ) ob_end_clean();
+        // Verify Nonce for Export to satisfy Plugin Check
+        if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), 'ltw_export_customers_nonce' ) ) {
+            wp_die( esc_html__( 'Security check failed. Please try again.', 'zuta-lucky-wheel' ) );
+        }
 
-            // Call Model with date parameters
-            $rows = $this->model->get_all_customers($start_date, $end_date);
-            
-            // Updated filename to English
-            $filename = 'customer-list-' . date('Y-m-d_H-i') . '.csv';
+        $start_date = isset( $_GET['start_date'] ) ? sanitize_text_field( wp_unslash( $_GET['start_date'] ) ) : '';
+        $end_date   = isset( $_GET['end_date'] )   ? sanitize_text_field( wp_unslash( $_GET['end_date'] ) ) : '';
 
-            header( 'Content-Type: text/csv; charset=utf-8' );
-            header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-            header( 'Pragma: no-cache' );
-            header( 'Expires: 0' );
+        if ( ob_get_length() ) {
+            ob_end_clean();
+        }
 
-            $output = fopen( 'php://output', 'w' );
-            fputs( $output, "\xEF\xBB\xBF" ); // Add BOM for Excel compatibility
+        $rows = $this->model->get_all_customers( $start_date, $end_date );
+        $filename = 'customer-list-' . gmdate( 'Y-m-d_H-i' ) . '.csv';
 
+        header( 'Content-Type: text/csv; charset=utf-8' );
+        header( 'Content-Disposition: attachment; filename="' . esc_attr( $filename ) . '"' );
+        header( 'Pragma: no-cache' );
+        header( 'Expires: 0' );
+
+        /**
+         * Standard PHP filesystem calls are required for CSV streaming to php://output.
+         * We use // phpcs:ignore to inform reviewers these are necessary for the export feature.
+         */
+        echo "\xEF\xBB\xBF"; 
+        
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+        $output = fopen( 'php://output', 'w' );
+        
+        if ( $output ) {
             fputcsv( $output, array( 'Full Name', 'Phone', 'Email', 'Gift Won', 'Date Joined' ) );
 
             if ( ! empty( $rows ) && is_array( $rows ) ) {
                 foreach ( $rows as $r ) {
-                    $gift = isset($r['getgift']) ? $r['getgift'] : (isset($r['gift']) ? $r['gift'] : '');
-                    $date = isset($r['created_at']) ? $r['created_at'] : (isset($r['datecreate']) ? $r['datecreate'] : '');
-                    $phone = isset($r['phone']) ? $r['phone'] : '';
-
                     fputcsv( $output, array(
-                        isset($r['fullname']) ? $r['fullname'] : '',
-                        $phone, 
-                        isset($r['email']) ? $r['email'] : '',
-                        $gift,
-                        $date
-                    ));
+                        isset( $r['fullname'] ) ? $r['fullname'] : '',
+                        isset( $r['phone'] )    ? $r['phone']    : '', 
+                        isset( $r['email'] )    ? $r['email']    : '',
+                        isset( $r['getgift'] )  ? $r['getgift']  : '',
+                        isset( $r['created_at'] ) ? $r['created_at'] : ''
+                    ) );
                 }
             }
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
             fclose( $output );
-            exit;
         }
+        exit;
     }
 
+    /**
+     * Renders the customer list table with filtering and pagination.
+     */
     public function render() {
-        // --- 1. GET FILTER PARAMETERS ---
-        $start_date = isset($_GET['start_date']) ? sanitize_text_field($_GET['start_date']) : '';
-        $end_date   = isset($_GET['end_date'])   ? sanitize_text_field($_GET['end_date'])   : '';
+        // Sanitize Filter Action
+        $is_filtering = ( isset( $_GET['start_date'] ) || isset( $_GET['end_date'] ) );
+        if ( $is_filtering && ( ! isset( $_GET['ltw_filter_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['ltw_filter_nonce'] ) ), 'ltw_filter_customers_action' ) ) ) {
+             echo '<div class="error"><p>' . esc_html__( 'Security check failed.', 'zuta-lucky-wheel' ) . '</p></div>';
+        }
 
-        // --- 2. FETCH DATA FROM MODEL (WITH FILTER) ---
-        $all_rows = $this->model->get_all_customers($start_date, $end_date);
-        if (!is_array($all_rows)) { $all_rows = []; }
+        $start_date = isset( $_GET['start_date'] ) ? sanitize_text_field( wp_unslash( $_GET['start_date'] ) ) : '';
+        $end_date   = isset( $_GET['end_date'] )   ? sanitize_text_field( wp_unslash( $_GET['end_date'] ) ) : '';
 
-        // --- 3. PAGINATION ---
-        $total_items = count($all_rows);
-        $items_per_page = 20; 
-        $current_page = isset($_GET['paged']) ? absint($_GET['paged']) : 1;
-        if($current_page < 1) $current_page = 1;
-        
-        $total_pages = ceil($total_items / $items_per_page);
-        $offset = ($current_page - 1) * $items_per_page;
-        
-        $rows = array_slice($all_rows, $offset, $items_per_page);
+        $all_rows = $this->model->get_all_customers( $start_date, $end_date );
+        if ( ! is_array( $all_rows ) ) { $all_rows = []; }
 
-        // --- CSS ---
+        // --- FIXED PAGINATION LOGIC ---
+        $total_items    = count( $all_rows );
+        $items_per_page = 10; // Reduced to 10 to ensure pagination shows up in your test data
+        $current_page   = isset( $_GET['paged'] ) ? absint( wp_unslash( $_GET['paged'] ) ) : 1;
+        $total_pages    = ceil( $total_items / $items_per_page );
+        $offset         = ( $current_page - 1 ) * $items_per_page;
+        $rows           = array_slice( $all_rows, $offset, $items_per_page );
+
+        $page_slug = isset( $_REQUEST['page'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ) : '';
+        $tab_slug  = isset( $_REQUEST['tab'] )  ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) )  : '';
+
         ?>
         <style>
-            .ltw-pagination { margin: 15px 0; text-align: right; }
+            /* Pagination Container */
+            .ltw-pagination { 
+                margin: 5px 0; 
+                text-align: right; 
+                line-height: 2;
+            }
+            
+            /* Pagination Button Base Style */
             .ltw-pagination .page-numbers {
-                display: inline-block; padding: 5px 10px; margin-left: 4px;
-                font-size: 14px; font-weight: 500; text-decoration: none;
-                color: #0073aa; background: #fff; border: 1px solid #ccd0d4;
-                border-radius: 3px;
+                display: inline-block;
+                padding: 3px 5px;
+                margin: 0 2px;
+                text-decoration: none;
+                background: #fff;
+                color: #0073aa;
+                border: 1px solid #0073aa;
+                border-radius: 4px; /* Bo góc nhẹ như hình pages.png */
+                font-weight: 500;
+                min-width: 15px;
+                text-align: center;
             }
-            .ltw-pagination .page-numbers.current { background: #0073aa; color: #fff; border-color: #0073aa; }
-            
-            /* Filter Bar Styles */
-            .ltw-filter-bar {
-                background: #fff; padding: 15px; margin: 20px 0;
-                border: 1px solid #ccd0d4; border-left: 4px solid #2271b1;
-                box-shadow: 0 1px 1px rgba(0,0,0,.04);
-                display: flex; align-items: center; justify-content: space-between;
+
+            /* Active/Current Page Style */
+            .ltw-pagination .page-numbers.current {
+                background: #0073aa; /* Màu xanh đặc trưng của WP */
+                color: #fff;
+                border-color: #0073aa;
             }
-            .ltw-filter-group { display: flex; align-items: center; gap: 10px; }
-            .ltw-export-btn {
-                background-color: #2271b1; border-color: #2271b1; color: #fff;
-                text-decoration: none; padding: 6px 15px; border-radius: 3px;
-                font-weight: 500; font-size: 13px; display: inline-flex; align-items: center;
+
+            /* Hover State */
+            .ltw-pagination .page-numbers:hover:not(.current) {
+                background: #f0f0f0;
+                color: #00a0d2;
             }
-            .ltw-export-btn:hover { background-color: #135e96; color: #fff; }
-            .dashicons { margin-right: 5px; }
+
+            /* Next/Previous Buttons */
+            .ltw-pagination .next, .ltw-pagination .prev {
+                font-weight: bold;
+            }
         </style>
-
-        <div class="wrap ltw-admin-section">
-            <h1 class="wp-heading-inline"><?php esc_html_e( 'Customers List', 'zuta-lucky-wheel' ); ?></h1>
-            <hr class="wp-header-end">
-            
+        <div class="wrap">
+            <h1><?php esc_html_e( 'Customers List', 'zuta-lucky-wheel' ); ?></h1>
             <form method="get">
-                <input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
-                <?php if(isset($_REQUEST['tab'])): ?>
-                    <input type="hidden" name="tab" value="<?php echo esc_attr( $_REQUEST['tab'] ); ?>" />
+                <input type="hidden" name="page" value="<?php echo esc_attr( $page_slug ); ?>" />
+                <?php if ( ! empty( $tab_slug ) ) : ?>
+                    <input type="hidden" name="tab" value="<?php echo esc_attr( $tab_slug ); ?>" />
                 <?php endif; ?>
+                
+                <?php wp_nonce_field( 'ltw_filter_customers_action', 'ltw_filter_nonce' ); ?>
 
-                <div class="ltw-filter-bar">
-                    <div class="ltw-filter-group">
-                        <label><strong><?php esc_html_e('Filter Date:', 'zuta-lucky-wheel'); ?></strong></label>
-                        
-                        <input type="date" name="start_date" value="<?php echo esc_attr($start_date); ?>" placeholder="Start Date">
-                        <span>to</span>
-                        <input type="date" name="end_date" value="<?php echo esc_attr($end_date); ?>" placeholder="End Date">
-                        
-                        <button type="submit" class="button button-secondary">
-                            <span class="dashicons dashicons-filter"></span> Filter
-                        </button>
-                        
-                        <?php if($start_date || $end_date): ?>
-                            <a href="?page=<?php echo esc_attr($_REQUEST['page']); ?>&tab=customer" class="button">Reset</a>
-                        <?php endif; ?>
+                <div class="ltw-filter-bar" style="display:flex; justify-content:space-between; background:#fff; padding:5px; margin:5px 0; border:1px solid #ccd0d4;">
+                    <div>
+                        <label><strong><?php esc_html_e( 'Filter Date:', 'zuta-lucky-wheel' ); ?></strong></label>
+                        <input type="date" name="start_date" value="<?php echo esc_attr( $start_date ); ?>">
+                        <input type="date" name="end_date" value="<?php echo esc_attr( $end_date ); ?>">
+                        <button type="submit" class="button"><?php esc_html_e( 'Filter', 'zuta-lucky-wheel' ); ?></button>
                     </div>
-
-                    <div class="ltw-actions">
-                        <?php 
-                            // Create Export link with current date parameters
-                            $export_args = array( 
-                                'action' => 'ltw_export_customers',
-                                'start_date' => $start_date,
-                                'end_date' => $end_date
-                            );
-                            $export_link = add_query_arg( $export_args, admin_url('admin.php') ); 
-                        ?>
-                        <a href="<?php echo esc_url($export_link); ?>" class="ltw-export-btn">
-                            <span class="dashicons dashicons-download"></span> Export Excel (.csv)
-                        </a>
-                    </div>
+                    <?php 
+                        $export_link = add_query_arg( array(
+                            'action'     => 'ltw_export_customers',
+                            'start_date' => $start_date,
+                            'end_date'   => $end_date,
+                            '_wpnonce'   => wp_create_nonce( 'ltw_export_customers_nonce' )
+                        ), admin_url( 'admin.php' ) ); 
+                    ?>
+                    <a href="<?php echo esc_url( $export_link ); ?>" class="button button-primary"><?php esc_html_e( 'Export Excel (.csv)', 'zuta-lucky-wheel' ); ?></a>
                 </div>
 
-                <?php $this->display_pagination($total_pages, $current_page); ?>
+               
 
-                <table class="widefat fixed striped table-view-list">
+                <table class="widefat fixed striped">
                     <thead>
                         <tr>
-                            <th style="width: 50px;">ID</th>
-                            <th><?php esc_html_e('Fullname','zuta-lucky-wheel');?></th>
-                            <th><?php esc_html_e('Phone','zuta-lucky-wheel');?></th>
-                            <th><?php esc_html_e('Email','zuta-lucky-wheel');?></th>
-                            <th><?php esc_html_e('Gift Won','zuta-lucky-wheel');?></th>
-                            <th><?php esc_html_e('Date','zuta-lucky-wheel');?></th>
+                            <th style="width:50px;">ID</th>
+                            <th><?php esc_html_e( 'Fullname', 'zuta-lucky-wheel' ); ?></th>
+                            <th><?php esc_html_e( 'Phone', 'zuta-lucky-wheel' ); ?></th>
+                            <th><?php esc_html_e( 'Email', 'zuta-lucky-wheel' ); ?></th>
+                            <th><?php esc_html_e( 'Gift Won', 'zuta-lucky-wheel' ); ?></th>
+                            <th><?php esc_html_e( 'Date', 'zuta-lucky-wheel' ); ?></th>
                         </tr>
                     </thead>
                     <tbody>
                     <?php if ( ! empty( $rows ) ) : foreach ( $rows as $r ) : ?>
                         <tr>
-                            <td><?php echo esc_html( isset($r['idcustomer']) ? $r['idcustomer'] : '' ); ?></td>
-                            <td><strong><?php echo esc_html( isset($r['fullname']) ? $r['fullname'] : '' ); ?></strong></td>
-                            <td><?php echo esc_html( isset($r['phone']) ? $r['phone'] : '' ); ?></td>
-                            <td><?php echo esc_html( isset($r['email']) ? $r['email'] : '' ); ?></td>
-                            <td><span style="color: green; font-weight: 500;">
-                                <?php echo esc_html( isset($r['getgift']) ? $r['getgift'] : (isset($r['gift']) ? $r['gift'] : '-') ); ?>
-                            </span></td>
-                            <td><?php echo esc_html( isset($r['created_at']) ? $r['created_at'] : (isset($r['datecreate']) ? $r['datecreate'] : '') ); ?></td>
+                            <td><?php echo esc_html( isset( $r['idcustomer'] ) ? $r['idcustomer'] : '' ); ?></td>
+                            <td><strong><?php echo esc_html( isset( $r['fullname'] ) ? $r['fullname'] : '' ); ?></strong></td>
+                            <td><?php echo esc_html( isset( $r['phone'] ) ? $r['phone'] : '' ); ?></td>
+                            <td><?php echo esc_html( isset( $r['email'] ) ? $r['email'] : '' ); ?></td>
+                            <td><?php echo esc_html( isset( $r['getgift'] ) ? $r['getgift'] : '' ); ?></td>
+                            <td><?php echo esc_html( isset( $r['created_at'] ) ? $r['created_at'] : '' ); ?></td>
                         </tr>
                     <?php endforeach; else : ?>
-                        <tr><td colspan="6" style="text-align:center; padding: 20px;"><?php esc_html_e( 'No customers found for this period.', 'zuta-lucky-wheel' ); ?></td></tr>
+                        <tr><td colspan="6"><?php esc_html_e( 'No customers found.', 'zuta-lucky-wheel' ); ?></td></tr>
                     <?php endif; ?>
                     </tbody>
                 </table>
 
-                <?php $this->display_pagination($total_pages, $current_page); ?>
+                <?php /** Render Pagination at the BOTTOM */ ?>
+                <div style="display:flex; justify-content:flex-end; margin-top:10px;">
+                    <?php $this->display_pagination( $total_pages, $current_page ); ?>
+                </div>
             </form>
         </div>
         <?php
     }
 
-    private function display_pagination($total_pages, $current_page) {
-        if ($total_pages <= 1) return;
-        
-        // IMPORTANT: Preserve filter parameters during pagination
+    
+    /**
+     * Renders pagination links securely with boxed style.
+     */
+    private function display_pagination( $total_pages, $current_page ) {
+        if ( $total_pages <= 1 ) { return; }
+
         $page_links = paginate_links( array(
-            'base' => add_query_arg( 'paged', '%#%' ),
-            'format' => '',
-            'prev_text' => __('&laquo; Previous'),
-            'next_text' => __('Next &raquo;'),
-            'total' => $total_pages,
-            'current' => $current_page,
-            'type' => 'plain'
+            'base'      => add_query_arg( 'paged', '%#%' ),
+            'format'    => '',
+            'prev_text' => __( 'Next &raquo;', 'zuta-lucky-wheel' ), // Đảo lại theo logic hiển thị nếu cần
+            'next_text' => __( 'Next &raquo;', 'zuta-lucky-wheel' ),
+            'prev_text' => __( '&laquo; Prev', 'zuta-lucky-wheel' ),
+            'total'     => $total_pages,
+            'current'   => $current_page,
+            'type'      => 'plain', // Đảm bảo trả về chuỗi HTML để CSS .page-numbers hoạt động
         ) );
-        
+
         if ( $page_links ) {
-            echo '<div class="ltw-pagination">' . $page_links . '</div>';
+            // Bao bọc trong div .ltw-pagination để nhận CSS ở trên
+            echo '<div class="ltw-pagination">' . wp_kses_post( $page_links ) . '</div>';
         }
     }
 }

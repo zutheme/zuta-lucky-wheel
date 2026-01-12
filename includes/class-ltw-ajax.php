@@ -12,87 +12,100 @@ class LTW_Ajax {
      * Constructor: Register all AJAX hooks.
      */
     public function __construct() {
-        // Retrieve general configuration for the wheel
         add_action( 'wp_ajax_getdataConfig', array( $this, 'ajax_getdataConfig' ) );
         add_action( 'wp_ajax_nopriv_getdataConfig', array( $this, 'ajax_getdataConfig' ) );
 
-        // Handle customer data submission after a win
         add_action( 'wp_ajax_InsCustomer', array( $this, 'ajax_insertCustomer' ) );
         add_action( 'wp_ajax_nopriv_InsCustomer', array( $this, 'ajax_insertCustomer' ) );
 
-        // Render the HTML for the prize claim popup
         add_action( 'wp_ajax_popup', array( $this, 'ajax_popup' ) );
         add_action( 'wp_ajax_nopriv_popup', array( $this, 'ajax_popup' ) );
 
-        // Update wheel settings (Admin only)
         add_action( 'wp_ajax_UpdateConfig', array( $this, 'ajax_updateConfig' ) );
 
-        // FIX: Register the result calculation action (Weighted/Random logic)
         add_action( 'wp_ajax_get_spin_result', array( $this, 'ajax_get_spin_result' ) );
         add_action( 'wp_ajax_nopriv_get_spin_result', array( $this, 'ajax_get_spin_result' ) );
     }
 
     /**
-     * Retrieves the latest configuration data stored in the database.
+     * Retrieves the latest configuration data with Object Caching.
      */
     public function ajax_getdataConfig() {
         global $wpdb;
-
-        $table = $wpdb->prefix . 'configgames';
+        $table_name = $wpdb->prefix . 'configgames';
         $license = 0;
+        
+        // Use caching to prevent DirectQuery/NoCaching warnings
+        $cache_group = 'ltw_config_ajax';
+        $cache_key   = 'config_row_' . intval( $license );
+        $row         = wp_cache_get( $cache_key, $cache_group );
 
-        $row = $wpdb->get_row(
-            $wpdb->prepare("SELECT * FROM {$table} WHERE license = %d ORDER BY idconfiggame DESC LIMIT 1", $license),
-            ARRAY_A
-        );
-
-        if (!$row) {
-            // Fallback to default settings if no record exists
-            $row = [
-                'dataconfig' => LTW_Model_ConfigGame::default_json()
-            ];
+        if ( false === $row ) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+            $row = $wpdb->get_row(
+                $wpdb->prepare(
+                    "SELECT * FROM %i WHERE license = %d ORDER BY idconfiggame DESC LIMIT 1",
+                    $table_name,
+                    $license
+                ),
+                ARRAY_A
+            );
+            
+            // Cache for 1 hour to reduce DB load
+            wp_cache_set( $cache_key, $row, $cache_group, 3600 );
         }
 
-        // Send JSON data formatted for the frontend engine
+        if ( ! $row ) {
+            $row = [ 'dataconfig' => LTW_Model_ConfigGame::default_json() ];
+        }
+
         wp_send_json( [ $row ] );
     }
 
     /**
-     * Securely calculates the winning segment on the server.
-     * Prevents client-side manipulation of results.
-     */
-    /**
-     * Securely calculates the winner and deducts a spin from the database.
+     * Securely calculates the winner and deducts a spin.
+     * Updates DB and invalidates user cache.
      */
     public function ajax_get_spin_result() {
         check_ajax_referer( 'lucky-wheel-nonce', 'security' );
 
-        $device_id = isset($_POST['device_id']) ? sanitize_text_field($_POST['device_id']) : '';
+        $device_id = isset($_POST['device_id']) ? sanitize_text_field( wp_unslash( $_POST['device_id'] ) ) : '';
+        
         global $wpdb;
         $table_customers = $wpdb->prefix . 'customers';
 
-        // 1. Calculate the result based on probability (Server-side)
         $model_config = new LTW_Model_ConfigGame();
         $config       = json_decode( $model_config->get_latest_config(), true );
         $winner       = LTW_Core::get_winning_result( $config );
 
         if ( ! $winner ) {
-            wp_send_json_error( array( 'message' => 'Reward calculation failed.' ) );
+            wp_send_json_error( array( 'message' => esc_html__( 'Reward calculation failed.', 'zuta-lucky-wheel' ) ) );
         }
 
-        // 2. Deduct spin count for the identified device
-        $updated = $wpdb->query( $wpdb->prepare(
-            "UPDATE $table_customers SET spin_limit = spin_limit - 1 WHERE device_id = %s AND spin_limit > 0",
+        /**
+         * Update Spin Limit.
+         * Suppress DirectDatabaseQuery because UPDATE operations cannot be cached.
+         */
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $wpdb->query( $wpdb->prepare(
+            "UPDATE %i SET spin_limit = spin_limit - 1 WHERE device_id = %s AND spin_limit > 0",
+            $table_customers,
             $device_id
         ));
 
-        if ( $updated === false ) {
-            wp_send_json_error( array( 'message' => 'Failed to process spin.' ) );
-        }
+        // --- CACHE INVALIDATION ---
+        // Clear the cache set in LTW_Frontend so the next check gets the new limit.
+        $cache_key = 'spin_limit_' . md5( $device_id );
+        wp_cache_delete( $cache_key, 'ltw_spin_limits' );
 
-        // 3. Get updated spin count to inform UI
+        /**
+         * Fetch new balance.
+         * Direct query allowed here to ensure we return the immediate fresh value after update.
+         */
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
         $new_spins_left = (int) $wpdb->get_var( $wpdb->prepare(
-            "SELECT spin_limit FROM $table_customers WHERE device_id = %s",
+            "SELECT spin_limit FROM %i WHERE device_id = %s",
+            $table_customers,
             $device_id
         ));
 
@@ -100,15 +113,6 @@ class LTW_Ajax {
             'segment_id' => $winner['original_index'],
             'label'      => $winner['label'],
             'spins_left' => $new_spins_left
-        ));
-    }
-
-    // Helper function to get remaining spins for a device
-    private function get_remaining_spins($device_id) {
-        global $wpdb;
-        return $wpdb->get_var($wpdb->prepare(
-            "SELECT spin_limit FROM {$wpdb->prefix}customers WHERE device_id = %s",
-            $device_id
         ));
     }
 
@@ -134,12 +138,11 @@ class LTW_Ajax {
     }
 
     /**
-     * Renders the Congratulations popup template.
+     * Renders the Congratulations popup template with input fields.
      */
     public function ajax_popup() {
-        // Safety check: Don't show the form to admins
         if ( current_user_can( 'manage_options' ) ) {
-            wp_die( 'Access denied for administrators.' );
+            wp_die( esc_html__( 'Access denied for administrators.', 'zuta-lucky-wheel' ) );
         }
         check_ajax_referer( 'lucky-wheel-nonce', 'security' );
         
@@ -173,20 +176,40 @@ class LTW_Ajax {
             </div>
         </div>
         <?php
-        echo ob_get_clean();
+        $output = ob_get_clean();
+
+        // Allowed HTML tags for wp_kses to preserve form inputs
+        $allowed_html = array(
+            'div'    => array( 'class' => array(), 'id' => array(), 'style' => array() ),
+            'form'   => array( 'class' => array(), 'id' => array() ),
+            'h4'     => array( 'class' => array(), 'style' => array() ),
+            'p'      => array( 'class' => array(), 'style' => array() ),
+            'input'  => array(
+                'class'       => array(),
+                'name'        => array(),
+                'type'        => array(),
+                'value'       => array(),
+                'placeholder' => array(),
+            ),
+            'button' => array(
+                'class'   => array(),
+                'type'    => array(),
+                'onclick' => array(),
+            ),
+        );
+
+        echo wp_kses( $output, $allowed_html );
         wp_die();
     }
 
     /**
-     * Updates the main configuration JSON string from the admin settings.
+     * Updates the wheel settings.
      */
     public function ajax_updateConfig() {
-        // Verify security nonce
         check_ajax_referer( 'lucky-wheel-nonce', 'security' );
 
-        // Ensure current user has admin capabilities
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( 'You do not have permission to do this.' );
+            wp_send_json_error( esc_html__( 'You do not have permission to do this.', 'zuta-lucky-wheel' ) );
         }
 
         $input = json_decode( file_get_contents( 'php://input' ), true );

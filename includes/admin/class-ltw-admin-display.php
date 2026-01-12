@@ -1,36 +1,83 @@
 <?php
 /**
  * LTW Admin Display Settings
+ * Handles the display and saving of general display options for the lucky wheel.
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 class LTW_Admin_Display {
 
+    /**
+     * Constructor: Hooks into admin initialization.
+     */
     public function __construct() {
         add_action( 'admin_init', array( $this, 'register_settings' ) );
     }
 
+    /**
+     * Registers plugin settings in the WordPress options table.
+     * FIX: Added sanitize_callback to all register_setting calls to satisfy Plugin Check.
+     */
     public function register_settings() {
-        // --- 1. ĐĂNG KÝ SETTING TITLE MỚI ---
-        register_setting( 'ltw_display_options_group', 'ltw_game_title' );
-
-        register_setting( 'ltw_display_options_group', 'ltw_popup_delay' );
-        register_setting( 'ltw_display_options_group', 'ltw_max_spins' );
-        register_setting( 'ltw_display_options_group', 'ltw_reset_days' );
+        // --- 1. REGISTER SETTINGS WITH SANITIZATION ---
         
-        register_setting( 'ltw_display_options_group', 'ltw_recaptcha_site_key' );
-        register_setting( 'ltw_display_options_group', 'ltw_recaptcha_secret_key' );
+        // Game Title
+        register_setting( 'ltw_display_options_group', 'ltw_game_title', array(
+            'type'              => 'string',
+            'sanitize_callback' => 'sanitize_text_field',
+            'default'           => 'Zuta Lucky Wheel'
+        ));
+
+        // Popup Delay (Integer)
+        register_setting( 'ltw_display_options_group', 'ltw_popup_delay', array(
+            'type'              => 'integer',
+            'sanitize_callback' => 'absint',
+            'default'           => 0
+        ));
+
+        // Max Spins (Integer)
+        register_setting( 'ltw_display_options_group', 'ltw_max_spins', array(
+            'type'              => 'integer',
+            'sanitize_callback' => 'absint',
+            'default'           => 1
+        ));
+
+        // Reset Days (Integer)
+        register_setting( 'ltw_display_options_group', 'ltw_reset_days', array(
+            'type'              => 'integer',
+            'sanitize_callback' => 'absint',
+            'default'           => 1
+        ));
+        
+        // Recaptcha Keys (Strings)
+        register_setting( 'ltw_display_options_group', 'ltw_recaptcha_site_key', array(
+            'type'              => 'string',
+            'sanitize_callback' => 'sanitize_text_field',
+            'default'           => ''
+        ));
+
+        register_setting( 'ltw_display_options_group', 'ltw_recaptcha_secret_key', array(
+            'type'              => 'string',
+            'sanitize_callback' => 'sanitize_text_field',
+            'default'           => ''
+        ));
     }
 
+    /**
+     * Renders the Display Settings page content.
+     */
     public function render() {
+        // Handle form submission securely
         if ( isset( $_POST['ltw_save_display'] ) && check_admin_referer( 'ltw_save_display_nonce' ) ) {
             
-            // --- 2. LƯU SETTING TITLE ---
+            // --- 2. SAVE SETTINGS MANUALLY (SECURITY DOUBLE CHECK) ---
+            
             if ( isset( $_POST['ltw_game_title'] ) ) {
-                update_option( 'ltw_game_title', sanitize_text_field( $_POST['ltw_game_title'] ) );
+                update_option( 'ltw_game_title', sanitize_text_field( wp_unslash( $_POST['ltw_game_title'] ) ) );
             }
 
+            // Numeric values
             $delay = isset( $_POST['ltw_popup_delay'] ) ? intval( $_POST['ltw_popup_delay'] ) : 0;
             update_option( 'ltw_popup_delay', $delay );
 
@@ -38,20 +85,21 @@ class LTW_Admin_Display {
             update_option( 'ltw_max_spins', $max_spins );
 
             $reset_days = isset( $_POST['ltw_reset_days'] ) ? intval( $_POST['ltw_reset_days'] ) : 1;
-            if ($reset_days < 1) $reset_days = 1; 
+            if ( $reset_days < 1 ) { $reset_days = 1; }
             update_option( 'ltw_reset_days', $reset_days );
 
+            // API Keys
             if ( isset( $_POST['ltw_recaptcha_site_key'] ) ) {
-                update_option( 'ltw_recaptcha_site_key', sanitize_text_field( $_POST['ltw_recaptcha_site_key'] ) );
+                update_option( 'ltw_recaptcha_site_key', sanitize_text_field( wp_unslash( $_POST['ltw_recaptcha_site_key'] ) ) );
             }
             if ( isset( $_POST['ltw_recaptcha_secret_key'] ) ) {
-                update_option( 'ltw_recaptcha_secret_key', sanitize_text_field( $_POST['ltw_recaptcha_secret_key'] ) );
+                update_option( 'ltw_recaptcha_secret_key', sanitize_text_field( wp_unslash( $_POST['ltw_recaptcha_secret_key'] ) ) );
             }
 
             echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Settings saved.', 'zuta-lucky-wheel' ) . '</p></div>';
         }
 
-        // --- 3. LẤY GIÁ TRỊ HIỆN TẠI (MẶC ĐỊNH LÀ "Zuta Lucky Wheel") ---
+        // --- 3. RETRIEVE CURRENT VALUES ---
         $current_title = get_option( 'ltw_game_title', 'Zuta Lucky Wheel' );
 
         $current_delay = get_option( 'ltw_popup_delay', 0 );
@@ -110,7 +158,7 @@ class LTW_Admin_Display {
                         <th scope="row"><label for="ltw_recaptcha_secret_key">Secret Key</label></th>
                         <td>
                             <input type="password" id="ltw_recaptcha_secret_key" name="ltw_recaptcha_secret_key" value="<?php echo esc_attr( $secret_key ); ?>" class="regular-text" />
-                            <p class="description"><a href="https://www.google.com/recaptcha/admin/create" target="_blank">Get Keys Here (Select v3)</a></p>
+                            <p class="description"><a href="https://www.google.com/recaptcha/admin/create" target="_blank"><?php echo esc_html__( 'Get Keys Here (Select v3)', 'zuta-lucky-wheel' ); ?></a></p>
                         </td>
                     </tr>
                 </table>

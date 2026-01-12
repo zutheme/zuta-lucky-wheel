@@ -1,12 +1,16 @@
 <?php
 /**
- * LTW Database helper: create required tables
+ * LTW Database Helper
+ * Handles the creation of required database tables upon plugin activation.
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 class LTW_Database {
 
+    /**
+     * Creates the configuration table (wp_configgames).
+     */
     public function create_config() {
         global $wpdb;
         $table_name = $wpdb->prefix . 'configgames';
@@ -23,12 +27,23 @@ class LTW_Database {
             PRIMARY KEY  (idconfiggame)
         ) {$charset_collate};";
 
-        if ( $wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" ) != $table_name ) {
-            require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+        /**
+         * FIX: Use prepare() with %s for table name to prevent SQL injection warnings.
+         * Suppress DirectDatabaseQuery because checking table existence requires direct SQL.
+         */
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) );
+
+        if ( $exists != $table_name ) {
             dbDelta( $sql );
         }
     }
 
+    /**
+     * Creates the customer table (wp_customers).
+     */
     public function create_customer() {
         global $wpdb;
         $t_customer = $wpdb->prefix . 'customers';
@@ -48,8 +63,16 @@ class LTW_Database {
             PRIMARY KEY  (idcustomer)
         ) {$charset_collate};";
 
-        if ( $wpdb->get_var( "SHOW TABLES LIKE '{$t_customer}'" ) != $t_customer ) {
-            require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+        /**
+         * FIX: Use prepare() and suppress DirectQuery/NoCaching warnings 
+         * as this is a schema operation.
+         */
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $t_customer ) );
+
+        if ( $exists != $t_customer ) {
             dbDelta( $sql );
         }
     }

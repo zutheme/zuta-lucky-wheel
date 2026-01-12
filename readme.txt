@@ -1,8 +1,8 @@
 === Zuta Lucky Wheel – Spin to Win & Lead Generation ===
 Contributors: hatazuwp
 Tags: lucky wheel, spin to win, popup, marketing, woocommerce
-Requires at least: 5.8
-Tested up to: 6.7
+Requires at least: 6.2
+Tested up to: 6.9
 Stable tag: 1.0.0
 Requires PHP: 7.4
 License: GPLv2 or later
@@ -52,7 +52,7 @@ This plugin utilizes the following third-party libraries:
 
 == Installation ==
 
-1. Upload the `lucky-the-wheel` folder to the `/wp-content/plugins/` directory.
+1. Upload the `zuta-lucky-wheel` folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Go to **Lucky Wheel** in the admin sidebar to configure your prizes and design.
 4. (Optional) Go to **Display Rules** to set up reCAPTCHA keys and spin limits.

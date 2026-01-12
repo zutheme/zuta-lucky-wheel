@@ -12,10 +12,9 @@ require_once LTW_PLUGIN_DIR . 'includes/models/model-configgame.php';
 class LTW_Admin_Setup {
 
     /**
-     * Render the main setup page HTML
+     * Render the main setup page HTML.
      */
     public function render() {
-
         $model = new LTW_Model_ConfigGame();
         $raw   = $model->get_latest_config();
         $json  = json_decode( $raw, true );
@@ -61,28 +60,37 @@ class LTW_Admin_Setup {
                         foreach ( $item as $key => $val ) {
                             echo '<li>';
                             
-                            // Retrieve the localized label for the specific config key
-                            echo '<p>' . LTW_Core::get_config_label( $key ) . '</p>';
+                            /**
+                             * FIX FOR LINE 65: Added esc_html to the label output.
+                             */
+                            echo '<p>' . esc_html( LTW_Core::get_config_label( $key ) ) . '</p>';
 
                             // --- FIELD RENDERING LOGIC ---
                             
                             // Case 1: Standard text inputs for labels and buttons
                             if ( in_array( $key, [ 'textbut', 'label' ] ) ) {
-                                echo "<input type='text' data-row='{$row}' data-key='{$key}' onchange='change_content(this)' value='" . esc_attr( $val ) . "'>";
+                                /**
+                                 * FIX FOR LINE 71: Escaped data attributes and values.
+                                 */
+                                echo '<input type="text" data-row="' . esc_attr( $row ) . '" data-key="' . esc_attr( $key ) . '" onchange="change_content(this)" value="' . esc_attr( $val ) . '">';
                             } 
                             // Case 2: Numeric inputs for styling (fonts, positions)
                             elseif ( in_array( $key, [ 'fontsize', 'textleft', 'texttop', 'sizetextbut' ] ) ) {
-                                echo "<input class='txt' type='text' data-row='{$row}' data-key='{$key}' onchange='change_content(this)' value='" . esc_attr( $val ) . "'>";
+                                /**
+                                 * FIX FOR LINE 75: Escaped data attributes and values.
+                                 */
+                                echo '<input class="txt" type="text" data-row="' . esc_attr( $row ) . '" data-key="' . esc_attr( $key ) . '" onchange="change_content(this)" value="' . esc_attr( $val ) . '">';
                             }
                             // Case 3: Win weight input for the probability calculation
                             elseif ( $key === 'probability' ) {
                                 ?>
                                 <div class="probability-wrapper">
+                                    <?php /** FIX FOR LINES 84-85: Escaped $row and $key variables. */ ?>
                                     <input type="number" min="0" max="1000" step="1" 
                                            class="small-text" 
                                            style="width: 80px;"
-                                           data-row="<?php echo $row; ?>" 
-                                           data-key="<?php echo $key; ?>" 
+                                           data-row="<?php echo esc_attr( $row ); ?>" 
+                                           data-key="<?php echo esc_attr( $key ); ?>" 
                                            onchange="change_content(this)" 
                                            value="<?php echo esc_attr( $val ); ?>">
                                 </div>
@@ -90,7 +98,10 @@ class LTW_Admin_Setup {
                             } 
                             // Case 4: Color picker for all other aesthetic settings
                             else {
-                                echo "<input type='text' class='my-color-field' data-row='{$row}' data-key='{$key}' value='" . esc_attr( $val ) . "'>";
+                                /**
+                                 * FIX FOR LINE 93: Escaped attributes for color fields.
+                                 */
+                                echo '<input type="text" class="my-color-field" data-row="' . esc_attr( $row ) . '" data-key="' . esc_attr( $key ) . '" value="' . esc_attr( $val ) . '">';
                             }
                             
                             echo '</li>';
@@ -112,12 +123,13 @@ class LTW_Admin_Setup {
                             if ( in_array( $key, [ 'display_mode', 'display_ids', 'game_mode' ] ) ) continue; 
                         ?>
                             <li>
-                                <p><?php echo LTW_Core::get_config_label( $key ); ?></p>
+                                <?php /** FIX FOR LINE 115: Escaped global config label. */ ?>
+                                <p><?php echo esc_html( LTW_Core::get_config_label( $key ) ); ?></p>
 
                                 <?php if ( in_array( $key, [ 'textbut', 'fontsize', 'sizetextbut' ] ) ) : ?>
-                                    <input type="text" data-row="0" data-key="<?= esc_attr( $key ) ?>" onchange="change_content(this)" value="<?= esc_attr( $val ) ?>">
+                                    <input type="text" data-row="0" data-key="<?php echo esc_attr( $key ); ?>" onchange="change_content(this)" value="<?php echo esc_attr( $val ); ?>">
                                 <?php else : ?>
-                                    <input class="my-color-field" type="text" data-row="0" data-key="<?= esc_attr( $key ) ?>" value="<?= esc_attr( $val ) ?>">
+                                    <input class="my-color-field" type="text" data-row="0" data-key="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $val ); ?>">
                                 <?php endif; ?>
                             </li>
                         <?php endforeach; ?>

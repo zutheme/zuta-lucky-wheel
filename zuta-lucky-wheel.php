@@ -4,7 +4,7 @@
  * Plugin URI:        https://github.com/zutheme/zuta-lucky-wheel
  * Description:       Boost marketing engagement with a physics-based Lucky Wheel. Create interactive spin-to-win campaigns to collect leads, offer rewards, and increase conversions.
  * Version:           1.0.0
- * Requires at least: 5.8
+ * Requires at least: 6.2
  * Requires PHP:      7.4
  * Author:            zutatheme
  * Author URI:        https://github.com/zutheme
@@ -44,18 +44,13 @@ if ( ! defined( 'LTW_ASSETS_URL' ) ) {
 }
 
 /* -------------------------------------------------------------------------
- * LOAD TEXT DOMAIN
- * ------------------------------------------------------------------------- */
-function ltw_load_textdomain() {
-    load_plugin_textdomain( 'zuta-lucky-wheel', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-}
-add_action( 'plugins_loaded', 'ltw_load_textdomain' );
-
-/* -------------------------------------------------------------------------
  * ACTIVATION HOOK
  * ------------------------------------------------------------------------- */
 register_activation_hook( __FILE__, 'ltw_run_activation_hook' );
 
+/**
+ * Executes plugin activation logic, such as creating database tables.
+ */
 function ltw_run_activation_hook() {
     // Ensure the database class file is loaded for table creation
     if ( ! class_exists( 'LTW_Database' ) ) {
@@ -84,6 +79,9 @@ require_once LTW_PLUGIN_DIR . 'includes/admin/admin-customers.php';
 /* -------------------------------------------------------------------------
  * INITIALIZE ADMIN FEATURES
  * ------------------------------------------------------------------------- */
+/**
+ * Initializes administrative features such as customer management.
+ */
 function ltw_init_admin_features() {
     if ( is_admin() ) {
         new LTW_Admin_Customers(); 
@@ -94,6 +92,9 @@ add_action( 'plugins_loaded', 'ltw_init_admin_features' );
 /* -------------------------------------------------------------------------
  * INITIALIZE CORE INSTANCE
  * ------------------------------------------------------------------------- */
+/**
+ * Initializes the main plugin core instance.
+ */
 add_action( 'plugins_loaded', function() {
     if ( class_exists( 'LTW_Core' ) ) {
         LTW_Core::get_instance();

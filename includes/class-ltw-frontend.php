@@ -1,12 +1,17 @@
 <?php
 /**
- * LTW Frontend: enqueue scripts & output public UI
- * Optimized Version: Click Trigger + Security Checks
+ * LTW Frontend: Enqueue scripts & Output public UI
+ * Optimized Version: Click Trigger + Security Checks + Object Caching
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 class LTW_Frontend {
+
+    /**
+     * Cache group name for frontend limits.
+     */
+    protected $cache_group = 'ltw_spin_limits';
 
     public function __construct() {
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_public_assets' ) );
@@ -88,7 +93,16 @@ class LTW_Frontend {
         
         // Enqueue Google reCAPTCHA v3 API (Only if key exists)
         if ( ! empty( $recaptcha_site_key ) ) {
-            wp_enqueue_script( 'google-recaptcha', 'https://www.google.com/recaptcha/api.js?render=' . esc_attr( $recaptcha_site_key ), array(), null, true );
+            /**
+             * FIX: Use LTW_PLUGIN_VERSION instead of null to fix "MissingVersion" warning.
+             */
+            wp_enqueue_script( 
+                'google-recaptcha', 
+                'https://www.google.com/recaptcha/api.js?render=' . esc_attr( $recaptcha_site_key ), 
+                array(), 
+                LTW_PLUGIN_VERSION, 
+                true 
+            );
         }
 
         // 6. Pass data to JS
@@ -209,16 +223,15 @@ class LTW_Frontend {
 
     /**
      * 5. REGISTER AJAX FOR LIMIT CHECK
-     * Includes: reCAPTCHA v3 Check + Fingerprint ID + IP Limit
-     */
-    /**
+     * Includes: reCAPTCHA v3 Check + Fingerprint ID + IP Limit + Object Caching
      * Checks spin limit by prioritizing Database records.
      * If a new device is detected, it initializes a record in the database.
      */
     public function check_spin_limit_by_ip() {
         check_ajax_referer( 'lucky-wheel-nonce', 'security' );
 
-        $device_id = isset($_POST['device_id']) ? sanitize_text_field($_POST['device_id']) : '';
+        $device_id = isset($_POST['device_id']) ? sanitize_text_field( wp_unslash( $_POST['device_id'] ) ) : '';
+        
         if ( empty($device_id) || $device_id === 'unknown' ) {
             wp_send_json_error( array( 'message' => 'Identity could not be verified.' ) );
         }
@@ -227,28 +240,46 @@ class LTW_Frontend {
         $table_customers = $wpdb->prefix . 'customers';
         $max_spins = (int) get_option( 'ltw_max_spins', 1 );
 
-        // 1. Try to find the user in the Database
-        $customer = $wpdb->get_row( $wpdb->prepare(
-            "SELECT idcustomer, spin_limit FROM $table_customers WHERE device_id = %s LIMIT 1",
-            $device_id
-        ));
+        // --- 1. CACHE CHECK START ---
+        $cache_key = 'spin_limit_' . md5( $device_id );
+        $cached_limit = wp_cache_get( $cache_key, $this->cache_group );
 
-        if ( ! $customer ) {
-            // 2. New user detected: Create a permanent record with default spins
-            $wpdb->insert(
-                $table_customers,
-                array(
-                    'device_id'  => $device_id,
-                    'spin_limit' => $max_spins,
-                    'fullname'   => 'Guest',
-                ),
-                array( '%s', '%d', '%s' )
-            );
-            $spins_left = $max_spins;
+        if ( false !== $cached_limit ) {
+            $spins_left = (int) $cached_limit;
         } else {
-            // 3. Existing user: Use the limit from the DB
-            $spins_left = (int) $customer->spin_limit;
+            // No cache, verify in DB
+            /**
+             * Use %i identifier placeholder for table name to satisfy security checks.
+             */
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+            $customer = $wpdb->get_row( $wpdb->prepare(
+                "SELECT idcustomer, spin_limit FROM %i WHERE device_id = %s LIMIT 1",
+                $table_customers,
+                $device_id
+            ));
+
+            if ( ! $customer ) {
+                // 2. New user detected: Create a permanent record with default spins
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+                $wpdb->insert(
+                    $table_customers,
+                    array(
+                        'device_id'  => $device_id,
+                        'spin_limit' => $max_spins,
+                        'fullname'   => 'Guest',
+                    ),
+                    array( '%s', '%d', '%s' )
+                );
+                $spins_left = $max_spins;
+            } else {
+                // 3. Existing user: Use the limit from the DB
+                $spins_left = (int) $customer->spin_limit;
+            }
+
+            // Save to cache for 12 hours (43200 seconds)
+            wp_cache_set( $cache_key, $spins_left, $this->cache_group, 43200 );
         }
+        // --- CACHE CHECK END ---
 
         // 4. Return result
         if ( $spins_left <= 0 ) {

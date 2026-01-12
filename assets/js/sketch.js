@@ -54,7 +54,7 @@ if (typeof window.LuckyWheelFront === 'undefined') {
 let _plugin_dir = (window.LuckyWheelFront && window.LuckyWheelFront.assets_url) ? window.LuckyWheelFront.assets_url : '';
 if (_plugin_dir && _plugin_dir.slice(-1) !== '/') _plugin_dir += '/';
 if (!_plugin_dir) {
-    _plugin_dir = window.location.origin + '/wp-content/plugins/lucky-the-wheel/assets/';
+    _plugin_dir = window.location.origin + '/wp-content/plugins/zuta-lucky-wheel/assets/';
 }
 
 let config = window.LuckyWheelFront && window.LuckyWheelFront.getConfig ? window.LuckyWheelFront.getConfig : [];
