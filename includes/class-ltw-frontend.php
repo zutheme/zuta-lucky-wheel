@@ -31,7 +31,9 @@ class LTW_Frontend {
         
         // 1. Always load CSS
         wp_enqueue_style( 'ltw-style', LTW_ASSETS_URL . 'css/rotate_style.css', array(), LTW_PLUGIN_VERSION );
-        wp_enqueue_script( 'admin-setup', LTW_ASSETS_URL . 'js/admin-setup.js', array( 'jquery' ), LTW_PLUGIN_VERSION, true );
+        
+        // FIX: Changed handle from 'admin-setup' to 'ltw-admin-setup' to avoid prefix issues
+        wp_enqueue_script( 'ltw-admin-setup', LTW_ASSETS_URL . 'js/admin-setup.js', array( 'jquery' ), LTW_PLUGIN_VERSION, true );
 
         // 2. Prepare configuration data
         $config_json = LTW_Model_ConfigGame::get_instance_latest();

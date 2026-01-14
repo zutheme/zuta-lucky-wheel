@@ -168,7 +168,8 @@ jQuery(document).ready(function($) {
         if (!fullname){ window.isPopupOpen = false; window.ltw_show_notice(txt_err_name); return; }
         if (!phone){ window.isPopupOpen = false; window.ltw_show_notice(txt_err_phone); return; }
 
-        let url  = LuckyWheelFront.ajax_url + "?action=InsCustomer&security=" + LuckyWheelFront.nonce;
+        // FIX: Added 'ltw_' prefix to action name
+        let url  = LuckyWheelFront.ajax_url + "?action=ltw_InsCustomer&security=" + LuckyWheelFront.nonce;
         let params = JSON.stringify({
             fullname: fullname, phone: phone, email: email,
             getgift: (typeof _getgift !== 'undefined') ? _getgift : '',
@@ -221,7 +222,8 @@ jQuery(document).ready(function($) {
              idcampain = (typeof _idcampain !== 'undefined') ? _idcampain : 1;
         }
 
-        let url = LuckyWheelFront.ajax_url + "?action=popup&security=" + LuckyWheelFront.nonce;
+        // FIX: Added 'ltw_' prefix to action name
+        let url = LuckyWheelFront.ajax_url + "?action=ltw_popup&security=" + LuckyWheelFront.nonce;
         let params = JSON.stringify({ name_gif: namegift, url_img: url_img, idcampain: idcampain });
 
         let http = new XMLHttpRequest();

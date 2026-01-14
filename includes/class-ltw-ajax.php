@@ -12,19 +12,20 @@ class LTW_Ajax {
      * Constructor: Register all AJAX hooks.
      */
     public function __construct() {
-        add_action( 'wp_ajax_getdataConfig', array( $this, 'ajax_getdataConfig' ) );
-        add_action( 'wp_ajax_nopriv_getdataConfig', array( $this, 'ajax_getdataConfig' ) );
+        // FIX: Added 'ltw_' prefix to all AJAX actions
+        add_action( 'wp_ajax_ltw_getdataConfig', array( $this, 'ajax_getdataConfig' ) );
+        add_action( 'wp_ajax_nopriv_ltw_getdataConfig', array( $this, 'ajax_getdataConfig' ) );
 
-        add_action( 'wp_ajax_InsCustomer', array( $this, 'ajax_insertCustomer' ) );
-        add_action( 'wp_ajax_nopriv_InsCustomer', array( $this, 'ajax_insertCustomer' ) );
+        add_action( 'wp_ajax_ltw_InsCustomer', array( $this, 'ajax_insertCustomer' ) );
+        add_action( 'wp_ajax_nopriv_ltw_InsCustomer', array( $this, 'ajax_insertCustomer' ) );
 
-        add_action( 'wp_ajax_popup', array( $this, 'ajax_popup' ) );
-        add_action( 'wp_ajax_nopriv_popup', array( $this, 'ajax_popup' ) );
+        add_action( 'wp_ajax_ltw_popup', array( $this, 'ajax_popup' ) );
+        add_action( 'wp_ajax_nopriv_ltw_popup', array( $this, 'ajax_popup' ) );
 
-        add_action( 'wp_ajax_UpdateConfig', array( $this, 'ajax_updateConfig' ) );
+        add_action( 'wp_ajax_ltw_UpdateConfig', array( $this, 'ajax_updateConfig' ) );
 
-        add_action( 'wp_ajax_get_spin_result', array( $this, 'ajax_get_spin_result' ) );
-        add_action( 'wp_ajax_nopriv_get_spin_result', array( $this, 'ajax_get_spin_result' ) );
+        add_action( 'wp_ajax_ltw_get_spin_result', array( $this, 'ajax_get_spin_result' ) );
+        add_action( 'wp_ajax_nopriv_ltw_get_spin_result', array( $this, 'ajax_get_spin_result' ) );
     }
 
     /**

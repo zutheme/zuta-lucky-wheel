@@ -74,6 +74,7 @@ require_once LTW_PLUGIN_DIR . 'includes/class-ltw-ajax.php';
 require_once LTW_PLUGIN_DIR . 'includes/class-ltw-database.php';
 require_once LTW_PLUGIN_DIR . 'includes/class-ltw-shortcode.php';
 require_once LTW_PLUGIN_DIR . 'includes/models/model-customer.php';
+require_once LTW_PLUGIN_DIR . 'includes/models/model-configgame.php'; // Ensure config model is included
 require_once LTW_PLUGIN_DIR . 'includes/admin/admin-customers.php';
 
 /* -------------------------------------------------------------------------

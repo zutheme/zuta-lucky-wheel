@@ -97,7 +97,7 @@ jQuery(document).ready(function($) {
     // ==================================================
     // 3. CLICK EVENT HANDLER (GIFT & LINK) - UPDATED
     // ==================================================
-    // Thay đổi selector từ 'a' sang '.ltw-gift-link' để bắt chính xác hơn
+    // Changed selector from 'a' to '.ltw-gift-link' for better precision
     $(document).on('click', '.ltw-gift-link, a[href*="lucky_spin"]', function(e) {
         
         e.preventDefault();
@@ -110,14 +110,14 @@ jQuery(document).ready(function($) {
 
         // 3.1 HIDE GIFT & STOP FIREWORKS
         if ($gift.length > 0) {
-            $gift.fadeOut(); // Ẩn hộp quà
+            $gift.fadeOut(); // Hide gift box
             
-            // Dừng hiệu ứng pháo hoa để nhẹ máy
+            // Stop fireworks effect to save resources
             if (fireworkInterval) {
                 clearInterval(fireworkInterval);
                 fireworkInterval = null;
             }
-            // Xóa các hạt pháo hoa còn sót lại
+            // Remove remaining firework particles
             $('.ltw-firework').remove();
         }
 

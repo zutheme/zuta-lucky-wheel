@@ -75,7 +75,7 @@ let mode_admin = false;
 let colodd = "#eff4fb", colevent = "#0564b1", colwin = "#033b70",
     coltextwin = "#ffffff", coltextodd = "#000000", coltexteven = "#ffffff";
 let colbut = "#007CBD", coltextbut = "#000000", sizetextbut = 16,
-    textbut = "QUAY", colbutpress = "#03acf9", coltextpress = "#ffffff";
+    textbut = "SPIN", colbutpress = "#03acf9", coltextpress = "#ffffff";
 
 let _count = 0, _maxc = 3;
 
@@ -176,7 +176,9 @@ function h_default() {
 function getdatascore(callback) {
     let http = new XMLHttpRequest();
     let baseAjax = (window.LuckyWheelFront && LuckyWheelFront.ajax_url) ? LuckyWheelFront.ajax_url : '/wp-admin/admin-ajax.php';
-    let url = baseAjax + "?action=getdataConfig";
+    
+    // FIX: Added 'ltw_' prefix to action name
+    let url = baseAjax + "?action=ltw_getdataConfig";
     
     // Ensure we have IDs
     let id_c = _idcampain || 1;
@@ -351,9 +353,9 @@ function mousePressed() {
                 window.isCheckingServer = true;
                 document.body.style.cursor = 'wait';
 
-                // We change the action to 'get_spin_result' (The new AJAX function we created in PHP)
+                // FIX: Added 'ltw_' prefix to action name
                 let data = {
-                    action: 'get_spin_result', 
+                    action: 'ltw_get_spin_result', 
                     security: window.LuckyWheelFront.nonce,
                     device_id: window.LuckyWheelFront.device_id || 'unknown',
                     recaptcha_token: recaptchaToken,
