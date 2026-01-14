@@ -12,9 +12,9 @@ Turn visitors into subscribers with a professional, realistic Lucky Wheel popup.
 
 == Description ==
 
-**Zuta Lucky Wheel** is a powerful marketing tool designed to turn visitors into subscribers and customers. It adds a "Spin to Win" wheel popup to your WordPress site, allowing users to enter their information for a chance to win prizes such as coupons, discounts, or free gifts.
+**Zuta Lucky Wheel** is a marketing tool designed to turn visitors into subscribers and customers. It adds a "Spin to Win" wheel popup to your WordPress site, allowing users to enter their information for a chance to win prizes such as coupons, discounts, or free gifts.
 
-Unlike other heavy plugins, **Zuta Lucky Wheel** is optimized for performance, using **Matter.js** and **p5.js** for smooth, realistic physics animations without slowing down your site.
+**Zuta Lucky Wheel** utilizes **Matter.js** and **p5.js** libraries to create smooth, realistic physics animations for the spinning effect.
 
 ### 🚀 Key Features
 
@@ -25,14 +25,28 @@ Unlike other heavy plugins, **Zuta Lucky Wheel** is optimized for performance, u
     * Edit the "Gift Box" trigger icon and winning messages.
 * **Flexible Winning Logic:**
     * **Weighted Probability:** Control exactly how often each prize is won (e.g., Prize A: 10%, Prize B: 0.1%).
-    * **Random Mode:** Let fate decide with pure 100% random outcomes.
+    * **Random Mode:** Let fate decide with random outcomes.
 * **Security & Anti-Cheat:**
-    * **Google reCAPTCHA v3 Integration:** Protect your wheel from bots and spam without annoying user challenges.
+    * **Google reCAPTCHA v3 Integration:** Protect your wheel from bots and spam.
     * **Smart Limits:** Limit spins per device/IP address.
     * **Reset Interval:** Allow users to spin again after X days.
 * **Data Collection:** Capture customer names, emails, and phone numbers before they spin.
-* **Mobile Friendly:** 100% responsive design that looks great on iPhone, Android, and Tablets.
-* **Lightweight:** Assets are loaded only when needed to keep your site fast.
+* **Mobile Friendly:** Responsive design that adapts to iPhone, Android, and Tablets.
+* **Performance:** Assets are loaded conditionally only when needed.
+
+== External Services ==
+
+This plugin relies on the following third-party services to function properly:
+
+1. **Google reCAPTCHA v3**
+   * **Used for:** Protecting the spin form from spam and bot abuse.
+   * **Data Sent:** Hardware and software information, such as device and application data, is sent to Google for analysis.
+   * **Privacy Policy:** https://policies.google.com/privacy
+   * **Terms of Service:** https://policies.google.com/terms
+
+2. **CDN Usage (jsDelivr / DataTables)**
+   * **Used for:** Loading necessary library assets (e.g., DataTables assets, p5.js translations) to ensure functionality.
+   * **Privacy Policy:** https://www.jsdelivr.com/terms/privacy-policy-jsdelivr-net
 
 == Third-Party Software ==
 
