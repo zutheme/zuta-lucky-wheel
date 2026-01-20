@@ -1,0 +1,410 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Lucky The Wheel\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-12-30 00:00+0000\n"
+"PO-Revision-Date: 2026-01-10 12:08+0000\n"
+"Last-Translator: \n"
+"Language-Team: Tiếng Việt\n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.8.0; wp-6.9; php-8.0.30\n"
+"X-Domain: zuta-lucky-wheel"
+
+msgid "Account"
+msgstr "Tài khoản"
+
+msgid "Active or extend"
+msgstr "Kích hoạt hoặc gia hạn"
+
+msgid "Begin"
+msgstr "Bắt đầu"
+
+msgid "Button Color"
+msgstr "Màu nút"
+
+msgid "Button Press Color"
+msgstr "Màu nút khi nhấn"
+
+msgid "Button Press Text Color"
+msgstr "Màu chữ khi nhấn nút"
+
+msgid "Button Text"
+msgstr "Chữ trên nút"
+
+msgid "Button Text Color"
+msgstr "Màu chữ nút"
+
+msgid "Button Text Size"
+msgstr "Cỡ chữ của nút"
+
+msgid "Campain"
+msgstr "Chiến dịch"
+
+msgid "Campain name"
+msgstr "Tên chiến dịch"
+
+msgid "Click here"
+msgstr "nhấn vào đây"
+
+msgid "Close"
+msgstr "Đống"
+
+msgid "Congratulation"
+msgstr "Chúc mừng"
+
+msgid "Congratulations"
+msgstr "Chúc mừng"
+
+msgid "Congratulations!"
+msgstr "Chúc mừng"
+
+msgid "Congratulations! Information sent successfully!"
+msgstr "Chúc mừng bạn! thông tin đã được gửi"
+
+msgid ""
+"Create game rules policy: number of participations, set prizes, start and "
+"end dates for each campain"
+msgstr ""
+"Tạo chính sách luật chơi: số lần tham gia, thiết lập giải thưởng, ngày bắt "
+"đầu và kết thúc cho từng chiến dịch"
+
+msgid "Created Date"
+msgstr "Ngày tạo"
+
+msgid "created_at"
+msgstr "ngày_tạo"
+
+msgid "Customer"
+msgstr "Khách hàng"
+
+msgid "Customers"
+msgstr "Khách hàng"
+
+msgid "Customize color for each cell"
+msgstr "Tùy chỉnh màu sắc cho từng ô"
+
+msgid "Date"
+msgstr "Ngày"
+
+msgid "Description"
+msgstr "Mô tả"
+
+msgid "Design Setup"
+msgstr "Thiết kế"
+
+msgid "Display"
+msgstr "HIện thị"
+
+msgid "Display Rules"
+msgstr "Hiện thị"
+
+msgid "Domain has been actived successly"
+msgstr "Tên miền đã được kích hoạt thành công"
+
+msgid "Domain have not actived yet"
+msgstr "Tên miền chưa được kích hoạt"
+
+msgid "Domain was actived"
+msgstr "Tên miền đã được kích hoạt"
+
+msgid "Edit size, align text"
+msgstr "Chỉnh sửa kích thước, căn chỉnh văn bản"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "End"
+msgstr "Kết thúc"
+
+msgid "Error sending information. Please try again!"
+msgstr "Lỗi khi gửi thông tin. Vui lòng thử lại!"
+
+msgid "Even Background"
+msgstr "Nền ô chẵn"
+
+msgid "Even Segment Color"
+msgstr "Màu ô chẵn"
+
+msgid "Faided"
+msgstr "Thất bại"
+
+msgid "Failed"
+msgstr "Thất bại"
+
+msgid "Featured function"
+msgstr "Tính năng nổi bật"
+
+msgid "Font Size"
+msgstr "Cỡ chữ"
+
+msgid "FREE SPIN"
+msgstr "lượt quay miễn phí"
+
+msgid "Fullname"
+msgstr "Họ và tên"
+
+msgid "Gift"
+msgstr "Quà tặng"
+
+#. Author of the plugin
+msgid "hatazu"
+msgstr "hatazu"
+
+msgid "How many days before the user can spin again? Default is 1 day."
+msgstr "Sau bao nhiêu ngày người dùng mới có thể quay lại? Mặc định là 1 ngày."
+
+#. Author URI of the plugin
+msgid "https://zutatheme.com"
+msgstr "https://zutatheme.com"
+
+msgid "Input your activation code"
+msgstr "Nhập mã kích hoạt của bạn"
+
+msgid "Invalid config JSON"
+msgstr "Cấu hình JSON không hợp lệ"
+
+msgid "Invalid email or password"
+msgstr "Email hoặc mật khẩu không hợp lệ"
+
+# ============================================================
+# NEW CONFIG LABELS (From get_config_label function)
+# ============================================================
+msgid "Label"
+msgstr "Nhãn"
+
+msgid "Laptop"
+msgstr "Laptop"
+
+msgid "Leave your infomation, please!"
+msgstr "Vui lòng để lại thông tin của bạn!"
+
+msgid "Login"
+msgstr "Đăng nhập"
+
+msgid "Logout"
+msgstr "Đăng xuất"
+
+#. Name of the plugin
+msgid "Lucky The Wheel"
+msgstr "Vòng Quay May Mắn"
+
+#. Description of the plugin
+msgid "Lucky The Wheel — refactored structure keeping original logic."
+msgstr ""
+"Lucky The Wheel — cấu trúc được tái cấu trúc nhưng vẫn giữ nguyên logic ban "
+"đầu."
+
+# ============================================================
+# GENERAL UI STRINGS (Preserved from old POT)
+# ============================================================
+msgid "Lucky Wheel Settings"
+msgstr "Cài đặt Vòng Quay May Mắn"
+
+msgid ""
+"Lucky wheel spin is a tool to effectively support marketing campaigns to "
+"attract potential customers, help players have many interesting experiences, "
+"create excitement, and convince players to be motivated to participate "
+"actively."
+msgstr ""
+"Vòng quay may mắn là công cụ hỗ trợ hiệu quả các chiến dịch marketing nhằm "
+"thu hút khách hàng tiềm năng, giúp người chơi có nhiều trải nghiệm thú vị, "
+"tạo sự hào hứng và thúc đẩy người chơi tham gia tích cực."
+
+msgid "Manage player information"
+msgstr "Quản lý thông tin người chơi"
+
+msgid "Manual Trigger"
+msgstr "Kích hoạt"
+
+msgid "Max Spins per Device"
+msgstr "Số vòng quay tối đa cho mỗi thiết bị"
+
+msgid "Mini game Lucky wheel spin"
+msgstr "Mini game Vòng quay may mắn"
+
+msgid "Mobile"
+msgstr "Điện thoại"
+
+msgid "Name"
+msgstr "Tên"
+
+msgid "New Campain"
+msgstr "Chiến dịch mới"
+
+msgid "next number of plays"
+msgstr "lượt chơi tiếp theo"
+
+msgid "Not authenticated"
+msgstr "Chưa xác thực"
+
+msgid "Notification"
+msgstr "Thông báo"
+
+msgid "number of play per person"
+msgstr "số lượt chơi mỗi người"
+
+msgid "Odd Background"
+msgstr "Nền ô lẻ"
+
+msgid "Odd Segment Color"
+msgstr "Màu ô lẻ"
+
+msgid "only support audio mp3, file size less than 1 MB"
+msgstr "chỉ hỗ trợ âm thanh mp3, kích thước tệp dưới 1 MB"
+
+msgid "Option"
+msgstr "Tùy chọn"
+
+msgid "or login"
+msgstr "hoặc đăng nhập"
+
+msgid "Over times"
+msgstr "Hết lượt chơi"
+
+msgid "Phone"
+msgstr "Số điện thoại"
+
+msgid "Please enter your full name"
+msgstr "Vui lòng nhập đầy đủ họ tên của bạn"
+
+msgid "Please enter your phone number"
+msgstr "Vui lòng nhập số điện thoại của bạn"
+
+msgid "Plugin has been actived successly, expire on date"
+msgstr "Plugin đã được kích hoạt thành công, hết hạn vào ngày"
+
+msgid "Pointer Color"
+msgstr "Màu kim chỉ"
+
+msgid "Pointer Text Color"
+msgstr "Màu chữ kim chỉ"
+
+msgid "Popup Delay (seconds)"
+msgstr "Độ trễ hiển thị cửa sổ bật lên (giây)"
+
+msgid "Position Left"
+msgstr "Vị trí trái"
+
+msgid "Position Top"
+msgstr "Vị trí trên"
+
+msgid "Register"
+msgstr "Đăng ký"
+
+msgid ""
+"Register member for taking access token which allows your plugin to manage "
+"features of its own installation, and upgrade"
+msgstr ""
+"Đăng ký thành viên để lấy mã truy cập cho phép plugin quản lý các tính năng "
+"cài đặt và nâng cấp"
+
+msgid ""
+"Report the list of customers participating, receiving rewards according to "
+"the campain"
+msgstr "Báo cáo danh sách khách hàng tham gia, nhận thưởng theo chiến dịch"
+
+msgid "Reset Limit After (Days)"
+msgstr "Đặt lại giới hạn sau (Ngày)"
+
+msgid "Select"
+msgstr "Chọn"
+
+msgid "Setting"
+msgstr "Cài đặt"
+
+msgid "Setup"
+msgstr "Thiết lập"
+
+msgid "Setup account"
+msgstr "Thiết lập tài khoản"
+
+msgid "Shortcode:"
+msgstr "Shortcode (Mã ngắn):"
+
+msgid "Submit"
+msgstr "Gửi"
+
+msgid "Success"
+msgstr "Thành công"
+
+msgid "Successfully logged in"
+msgstr "Đăng nhập thành công"
+
+msgid "Successfully logged out"
+msgstr "Đăng xuất thành công"
+
+msgid "Thank for joining the game event"
+msgstr "Cảm ơn bạn đã tham gia sự kiện"
+
+msgid "Thanks for taking part"
+msgstr "Cảm ơn bạn đã tham gia"
+
+msgid "The activation code expire on"
+msgstr "Mã kích hoạt hết hạn vào"
+
+msgid "The activation code has been used already"
+msgstr "Mã kích hoạt đã được sử dụng"
+
+msgid ""
+"The activation code is not valid or it is not belong to the account have "
+"logged in"
+msgstr "Mã kích hoạt không hợp lệ hoặc không thuộc về tài khoản đã đăng nhập"
+
+msgid "The Best Marketing Campaigns With Lucky Spin The Wheel Mini Game"
+msgstr "Các chiến dịch tiếp thị tốt nhất với Mini Game Vòng Quay May Mắn"
+
+msgid "The campain expired"
+msgstr "Chiến dịch đã hết hạn"
+
+msgid "The campain is comming soon on "
+msgstr "Chiến dịch sắp diễn ra vào ngày "
+
+msgid "The campain is expired on "
+msgstr "Chiến dịch hết hạn vào ngày "
+
+msgid "The campain is not exist"
+msgstr "Chiến dịch không tồn tại"
+
+msgid "The Ways to Boost Your Digital Marketing Campaign"
+msgstr "Các cách để thúc đẩy chiến dịch tiếp thị kỹ thuật số của bạn"
+
+msgid "Times"
+msgstr "Lần"
+
+msgid "today"
+msgstr "Hôm nay"
+
+msgid "today!"
+msgstr "hôm nay!"
+
+msgid "Token is valid"
+msgstr "Token hợp lệ"
+
+msgid "Upgrade"
+msgstr "Nâng cấp"
+
+msgid "Upload photo, location, image size"
+msgstr "Tải lên hình ảnh, vị trí, kích thước ảnh"
+
+msgid "Upload sound effects"
+msgstr "Tải lên hiệu ứng âm thanh"
+
+msgid "You are the lucky one to get"
+msgstr "Bạn là người may mắn nhận"
+
+msgid "You do not have permission to access this page"
+msgstr "Bạn không có quyền truy cập trang này"
+
+msgid "you have got a gift"
+msgstr "bạn đã nhận được một món quà"
+
+msgid "You have reached the limit for the number of plays"
+msgstr "Bạn đã đạt đến giới hạn số lượt chơi"
+
+msgid "Your token expired or not valid"
+msgstr "Token của bạn đã hết hạn hoặc không hợp lệ"

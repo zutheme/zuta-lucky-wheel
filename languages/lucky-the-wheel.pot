@@ -1,0 +1,397 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Lucky The Wheel\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-12-30 00:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.6.4; wp-6.2.2\n"
+"X-Domain: zuta-lucky-wheel"
+
+#. Description of the plugin
+msgid "Lucky The Wheel — refactored structure keeping original logic."
+msgstr ""
+
+#. Name of the plugin
+msgid "Lucky The Wheel"
+msgstr ""
+
+#. Author of the plugin
+msgid "hatazu"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://zutatheme.com"
+msgstr ""
+
+# ============================================================
+# NEW CONFIG LABELS (From get_config_label function)
+# ============================================================
+
+msgid "Label"
+msgstr ""
+
+msgid "Button Text"
+msgstr ""
+
+msgid "Font Size"
+msgstr ""
+
+msgid "Button Text Size"
+msgstr ""
+
+msgid "Position Left"
+msgstr ""
+
+msgid "Position Top"
+msgstr ""
+
+msgid "Odd Segment Color"
+msgstr ""
+
+msgid "Even Segment Color"
+msgstr ""
+
+msgid "Odd Background"
+msgstr ""
+
+msgid "Even Background"
+msgstr ""
+
+msgid "Pointer Color"
+msgstr ""
+
+msgid "Pointer Text Color"
+msgstr ""
+
+msgid "Button Color"
+msgstr ""
+
+msgid "Button Text Color"
+msgstr ""
+
+msgid "Button Press Color"
+msgstr ""
+
+msgid "Button Press Text Color"
+msgstr ""
+
+msgid "Mobile"
+msgstr ""
+
+msgid "Laptop"
+msgstr ""
+
+# ============================================================
+# GENERAL UI STRINGS (Preserved from old POT)
+# ============================================================
+
+msgid "Lucky Wheel Settings"
+msgstr ""
+
+msgid "Setting"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Phone"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Customers"
+msgstr ""
+
+msgid "Success"
+msgstr ""
+
+msgid "Congratulation"
+msgstr ""
+
+msgid "you have got a gift"
+msgstr ""
+
+msgid "Fullname"
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+msgid "Thanks for taking part"
+msgstr ""
+
+msgid "Over times"
+msgstr ""
+
+msgid "Leave your infomation, please!"
+msgstr ""
+
+msgid "Setup"
+msgstr ""
+
+msgid "Not authenticated"
+msgstr ""
+
+msgid "Your token expired or not valid"
+msgstr ""
+
+msgid "Successfully logged in"
+msgstr ""
+
+msgid "Successfully logged out"
+msgstr ""
+
+msgid "Logout"
+msgstr ""
+
+msgid "Login"
+msgstr ""
+
+msgid "Register member for taking access token which allows your plugin to manage features of its own installation, and upgrade"
+msgstr ""
+
+msgid "Register"
+msgstr ""
+
+msgid "or login"
+msgstr ""
+
+msgid "Setup account"
+msgstr ""
+
+msgid "The Best Marketing Campaigns With Lucky Spin The Wheel Mini Game"
+msgstr ""
+
+msgid "Account"
+msgstr ""
+
+msgid "You have reached the limit for the number of plays"
+msgstr ""
+
+msgid "The campain expired"
+msgstr ""
+
+msgid "The campain is expired on "
+msgstr ""
+
+msgid "Faided"
+msgstr ""
+
+msgid "Thank for joining the game event"
+msgstr ""
+
+msgid "next number of plays"
+msgstr ""
+
+msgid "Campain"
+msgstr ""
+
+msgid "Times"
+msgstr ""
+
+msgid "Begin"
+msgstr ""
+
+msgid "End"
+msgstr ""
+
+msgid "Created Date"
+msgstr ""
+
+msgid "created_at"
+msgstr ""
+
+msgid "Option"
+msgstr ""
+
+msgid "Gift"
+msgstr ""
+
+msgid "Select"
+msgstr ""
+
+msgid "Upgrade"
+msgstr ""
+
+msgid "Lucky wheel spin is a tool to effectively support marketing campaigns to attract potential customers, help players have many interesting experiences, create excitement, and convince players to be motivated to participate actively."
+msgstr ""
+
+msgid "Customize color for each cell"
+msgstr ""
+
+msgid "Edit size, align text"
+msgstr ""
+
+msgid "Upload photo, location, image size"
+msgstr ""
+
+msgid "Upload sound effects"
+msgstr ""
+
+msgid "Manage player information"
+msgstr ""
+
+msgid "Create game rules policy: number of participations, set prizes, start and end dates for each campain"
+msgstr ""
+
+msgid "Report the list of customers participating, receiving rewards according to the campain"
+msgstr ""
+
+msgid "Featured function"
+msgstr ""
+
+msgid "Mini game Lucky wheel spin"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "New Campain"
+msgstr ""
+
+msgid "Campain name"
+msgstr ""
+
+msgid "number of play per person"
+msgstr ""
+
+msgid "only support audio mp3, file size less than 1 MB"
+msgstr ""
+
+msgid "The campain is comming soon on "
+msgstr ""
+
+msgid "The campain is not exist"
+msgstr ""
+
+msgid "Failed"
+msgstr ""
+
+msgid "Domain was actived"
+msgstr ""
+
+msgid "Domain have not actived yet"
+msgstr ""
+
+msgid "Domain has been actived successly"
+msgstr ""
+
+msgid "Token is valid"
+msgstr ""
+
+msgid "The activation code has been used already"
+msgstr ""
+
+msgid "Customer"
+msgstr ""
+
+msgid "The activation code expire on"
+msgstr ""
+
+msgid "Input your activation code"
+msgstr ""
+
+msgid "Active or extend"
+msgstr ""
+
+msgid "Invalid email or password"
+msgstr ""
+
+msgid "The activation code is not valid or it is not belong to the account have logged in"
+msgstr ""
+
+msgid "Plugin has been actived successly, expire on date"
+msgstr ""
+
+msgid "The Ways to Boost Your Digital Marketing Campaign"
+msgstr ""
+
+msgid "Invalid config JSON"
+msgstr ""
+
+msgid "Shortcode:"
+msgstr ""
+
+msgid "You do not have permission to access this page"
+msgstr ""
+
+msgid "Congratulations"
+msgstr ""
+
+msgid "today"
+msgstr ""
+
+msgid "Click here"
+msgstr ""
+
+msgid "Notification"
+msgstr ""
+
+msgid "Please enter your full name"
+msgstr ""
+
+msgid "Please enter your phone number"
+msgstr ""
+
+msgid "Congratulations! Information sent successfully!"
+msgstr ""
+
+msgid "Error sending information. Please try again!"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Popup Delay (seconds)"
+msgstr ""
+
+msgid "Max Spins per Device"
+msgstr ""
+
+msgid "Reset Limit After (Days)"
+msgstr ""
+
+msgid "How many days before the user can spin again? Default is 1 day."
+msgstr ""
+
+msgid "Invalid config JSON"
+msgstr ""
+
+msgid "Display"
+msgstr ""
+
+msgid "Congratulations!"
+msgstr ""
+
+msgid "You are the lucky one to get"
+msgstr ""
+
+msgid "FREE SPIN"
+msgstr ""
+
+msgid "today!"
+msgstr ""
+
+msgid "Design Setup"
+msgstr ""
+
+msgid "Manual Trigger"
+msgstr ""
+
+msgid "Display Rules"
+msgstr ""
+
+msgid "Game Popup Title"
+msgstr ""

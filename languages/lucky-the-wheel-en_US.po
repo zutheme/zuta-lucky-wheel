@@ -1,0 +1,348 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Lucky The Wheel\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-12-30 00:00+0000\n"
+"PO-Revision-Date: 2025-12-30 12:03+0000\n"
+"Last-Translator: \n"
+"Language-Team: English (United States)\n"
+"Language: en_US\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.8.0; wp-6.9; php-8.0.30\n"
+"X-Domain: zuta-lucky-wheel"
+
+msgid "Account"
+msgstr "Account"
+
+msgid "Active or extend"
+msgstr "Activate or extend"
+
+msgid "Begin"
+msgstr "Begin"
+
+msgid "Button Color"
+msgstr "Button Color"
+
+msgid "Button Press Color"
+msgstr "Button Press Color"
+
+msgid "Button Press Text Color"
+msgstr "Button Press Text Color"
+
+msgid "Button Text"
+msgstr "Button Text"
+
+msgid "Button Text Color"
+msgstr "Button Text Color"
+
+msgid "Button Text Size"
+msgstr "Button Text Size"
+
+msgid "Campain"
+msgstr "Campaign"
+
+msgid "Campain name"
+msgstr "Campaign name"
+
+msgid "Congratulation"
+msgstr "Congratulations"
+
+msgid ""
+"Create game rules policy: number of participations, set prizes, start and "
+"end dates for each campain"
+msgstr ""
+"Create game rules policy: number of participations, set prizes, start and "
+"end dates for each campaign"
+
+msgid "Created Date"
+msgstr "Created Date"
+
+msgid "created_at"
+msgstr "created_at"
+
+msgid "Customer"
+msgstr "Customer"
+
+msgid "Customers"
+msgstr "Customers"
+
+msgid "Customize color for each cell"
+msgstr "Customize color for each segment"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Domain has been actived successly"
+msgstr "Domain has been activated successfully"
+
+msgid "Domain have not actived yet"
+msgstr "Domain has not been activated yet"
+
+msgid "Domain was actived"
+msgstr "Domain was activated"
+
+msgid "Edit size, align text"
+msgstr "Edit size, align text"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "End"
+msgstr "End"
+
+msgid "Even Background"
+msgstr "Even Background"
+
+msgid "Even Segment Color"
+msgstr "Even Segment Color"
+
+msgid "Faided"
+msgstr "Failed"
+
+msgid "Failed"
+msgstr "Failed"
+
+msgid "Featured function"
+msgstr "Featured functions"
+
+msgid "Font Size"
+msgstr "Font Size"
+
+msgid "Fullname"
+msgstr "Full Name"
+
+msgid "Gift"
+msgstr "Gift"
+
+#. Author of the plugin
+msgid "hatazu"
+msgstr "hatazu"
+
+#. Author URI of the plugin
+msgid "https://zutatheme.com"
+msgstr "https://zutatheme.com"
+
+msgid "Input your activation code"
+msgstr "Input your activation code"
+
+msgid "Invalid config JSON"
+msgstr "Invalid config JSON"
+
+msgid "Invalid email or password"
+msgstr "Invalid email or password"
+
+# ============================================================
+# NEW CONFIG LABELS (From get_config_label function)
+# ============================================================
+msgid "Label"
+msgstr "Label"
+
+msgid "Laptop"
+msgstr "Laptop"
+
+msgid "Leave your infomation, please!"
+msgstr "Please leave your information!"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Logout"
+msgstr "Logout"
+
+#. Name of the plugin
+msgid "Lucky The Wheel"
+msgstr "Lucky The Wheel"
+
+#. Description of the plugin
+msgid "Lucky The Wheel — refactored structure keeping original logic."
+msgstr "Lucky The Wheel — refactored structure keeping original logic."
+
+# ============================================================
+# GENERAL UI STRINGS (Preserved from old POT)
+# ============================================================
+msgid "Lucky Wheel Settings"
+msgstr "Lucky Wheel Settings"
+
+msgid ""
+"Lucky wheel spin is a tool to effectively support marketing campaigns to "
+"attract potential customers, help players have many interesting experiences, "
+"create excitement, and convince players to be motivated to participate "
+"actively."
+msgstr ""
+"Lucky wheel spin is a tool to effectively support marketing campaigns to "
+"attract potential customers, help players have many interesting experiences, "
+"create excitement, and motivate players to participate actively."
+
+msgid "Manage player information"
+msgstr "Manage player information"
+
+msgid "Mini game Lucky wheel spin"
+msgstr "Mini game Lucky wheel spin"
+
+msgid "Mobile"
+msgstr "Mobile"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "New Campain"
+msgstr "New Campaign"
+
+msgid "next number of plays"
+msgstr "next number of plays"
+
+msgid "Not authenticated"
+msgstr "Not authenticated"
+
+msgid "number of play per person"
+msgstr "Number of plays per person"
+
+msgid "Odd Background"
+msgstr "Odd Background"
+
+msgid "Odd Segment Color"
+msgstr "Odd Segment Color"
+
+msgid "only support audio mp3, file size less than 1 MB"
+msgstr "Only MP3 audio is supported, file size less than 1 MB"
+
+msgid "Option"
+msgstr "Option"
+
+msgid "or login"
+msgstr "or login"
+
+msgid "Over times"
+msgstr "No spins left"
+
+msgid "Phone"
+msgstr "Phone"
+
+msgid "Plugin has been actived successly, expire on date"
+msgstr "Plugin has been activated successfully, expires on"
+
+msgid "Pointer Color"
+msgstr "Pointer Color"
+
+msgid "Pointer Text Color"
+msgstr "Pointer Text Color"
+
+msgid "Position Left"
+msgstr "Position Left"
+
+msgid "Position Top"
+msgstr "Position Top"
+
+msgid "Register"
+msgstr "Register"
+
+msgid ""
+"Register member for taking access token which allows your plugin to manage "
+"features of its own installation, and upgrade"
+msgstr ""
+"Register as a member to get an access token, which allows your plugin to "
+"manage installation features and upgrades."
+
+msgid ""
+"Report the list of customers participating, receiving rewards according to "
+"the campain"
+msgstr ""
+"Report the list of participating customers and rewards received according to "
+"the campaign"
+
+msgid "Select"
+msgstr "Select"
+
+msgid "Setting"
+msgstr "Settings"
+
+msgid "Setup"
+msgstr "Setup"
+
+msgid "Setup account"
+msgstr "Setup account"
+
+msgid "Shortcode:"
+msgstr "Shortcode:"
+
+msgid "Submit"
+msgstr "Submit"
+
+msgid "Success"
+msgstr "Success"
+
+msgid "Successfully logged in"
+msgstr "Successfully logged in"
+
+msgid "Successfully logged out"
+msgstr "Successfully logged out"
+
+msgid "Thank for joining the game event"
+msgstr "Thank you for joining the game event"
+
+msgid "Thanks for taking part"
+msgstr "Thanks for participating"
+
+msgid "The activation code expire on"
+msgstr "The activation code expires on"
+
+msgid "The activation code has been used already"
+msgstr "The activation code has already been used"
+
+msgid ""
+"The activation code is not valid or it is not belong to the account have "
+"logged in"
+msgstr ""
+"The activation code is invalid or does not belong to the logged-in account"
+
+msgid "The Best Marketing Campaigns With Lucky Spin The Wheel Mini Game"
+msgstr "The Best Marketing Campaigns With Lucky Spin The Wheel Mini Game"
+
+msgid "The campain expired"
+msgstr "The campaign has expired"
+
+msgid "The campain is comming soon on "
+msgstr "The campaign is coming soon on "
+
+msgid "The campain is expired on "
+msgstr "The campaign expired on "
+
+msgid "The campain is not exist"
+msgstr "The campaign does not exist"
+
+msgid "The Ways to Boost Your Digital Marketing Campaign"
+msgstr "Ways to Boost Your Digital Marketing Campaign"
+
+msgid "Times"
+msgstr "Times"
+
+msgid "Token is valid"
+msgstr "Token is valid"
+
+msgid "Upgrade"
+msgstr "Upgrade"
+
+msgid "Upload photo, location, image size"
+msgstr "Upload photo, location, image size"
+
+msgid "Upload sound effects"
+msgstr "Upload sound effects"
+
+msgid "You do not have permission to access this page"
+msgstr "You do not have permission to access this page"
+
+msgid "you have got a gift"
+msgstr "You have received a gift"
+
+msgid "You have reached the limit for the number of plays"
+msgstr "You have reached the limit for the number of plays"
+
+msgid "Your token expired or not valid"
+msgstr "Your token has expired or is invalid"
