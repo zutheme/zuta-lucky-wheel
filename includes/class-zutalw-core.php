@@ -66,7 +66,7 @@ class ZUTALW_Core {
             return $items[array_rand($items)];
         }
 
-        // ĐÃ SỬA: Sử dụng wp_rand thay cho mt_rand
+       
         $rand = wp_rand(1, $total_weight);
         foreach ($items as $item) {
             $weight = (int)$item['probability'];

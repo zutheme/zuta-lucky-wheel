@@ -98,7 +98,7 @@ class ZUTALW_Frontend {
         }
     }
 
-    // ... (Giữ nguyên phần còn lại của class: auto_display_wheel, loading_markup, popup_notify_markup, check_spin_limit_by_ip) ...
+   
     public function auto_display_wheel() {
         if ( is_admin() || current_user_can( 'manage_options' ) ) return;
         $gift_url = ZUTALW_ASSETS_URL . 'images/gift1.png'; 
