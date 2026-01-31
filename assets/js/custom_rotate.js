@@ -161,14 +161,16 @@ jQuery(document).ready(function($) {
         if (!fullname){ window.isPopupOpen = false; window.zutalw_show_notice(txt_err_name); return; }
         if (!phone){ window.isPopupOpen = false; window.zutalw_show_notice(txt_err_phone); return; }
 
-        // FIX: Use 'zutalw-nonce' and correct action name
         let url  = ZutalwConfig.ajax_url + "?action=zutalw_InsCustomer&security=" + ZutalwConfig.nonce;
-        let params = JSON.stringify({
-            fullname: fullname, phone: phone, email: email,
-            getgift: (typeof _getgift !== 'undefined') ? _getgift : '',
-            license: (typeof _license !== 'undefined') ? _license : 0,
-            security: ZutalwConfig.nonce
-        });
+        
+        // [MODIFIED] Use URLSearchParams for Form Data instead of JSON
+        let params = new URLSearchParams();
+        params.append('fullname', fullname);
+        params.append('phone', phone);
+        params.append('email', email);
+        params.append('getgift', (typeof _getgift !== 'undefined') ? _getgift : '');
+        params.append('license', (typeof _license !== 'undefined') ? _license : 0);
+        params.append('security', ZutalwConfig.nonce);
 
         elem.disabled = true;
         let originalText = elem.innerText;
@@ -177,7 +179,9 @@ jQuery(document).ready(function($) {
         let http = new XMLHttpRequest();
         http.open("POST", url, true);
         http.setRequestHeader("Accept", "application/json");
-        http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+        
+        // [MODIFIED] Correct Header for POST data
+        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
 
         http.onreadystatechange = function(){
             if (http.readyState === 4){
@@ -197,7 +201,8 @@ jQuery(document).ready(function($) {
                 }
             }
         };
-        http.send(params);
+        // [MODIFIED] Send stringified params
+        http.send(params.toString());
     };
 
     // ==============================================================
@@ -212,14 +217,19 @@ jQuery(document).ready(function($) {
              idcampain = (typeof _idcampain !== 'undefined') ? _idcampain : 1;
         }
 
-        // FIX: Use ZutalwConfig
         let url = ZutalwConfig.ajax_url + "?action=zutalw_popup&security=" + ZutalwConfig.nonce;
-        let params = JSON.stringify({ name_gif: namegift, url_img: url_img, idcampain: idcampain });
+        
+        // [MODIFIED] Use URLSearchParams
+        let params = new URLSearchParams();
+        params.append('name_gif', namegift);
+        params.append('url_img', url_img);
+        params.append('idcampain', idcampain);
 
         let http = new XMLHttpRequest();
         http.open("POST", url, true);
         http.setRequestHeader("Accept", "application/json");
-        http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+        // [MODIFIED] Correct Header
+        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
 
         http.onreadystatechange = function(){
             if (http.readyState === 4){
@@ -235,7 +245,8 @@ jQuery(document).ready(function($) {
                 }
             }
         };
-        http.send(params);
+        // [MODIFIED] Send stringified params
+        http.send(params.toString());
     }
 
 });

@@ -2,7 +2,7 @@
 /**
  * zutalw Admin Class
  * Registers the administration menu and manages admin-side modules and assets.
- * FIXED: Unify variable name to 'ZutalwConfig' for ALL scripts.
+ * FIXED: Localize script attached to 'zutalw-sketch' to ensure Assets URL is available early.
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
@@ -91,8 +91,10 @@ class ZUTALW_Admin {
         wp_enqueue_style( 'zutalw-admin-css', ZUTALW_ASSETS_URL . 'css/style_rotate_admin.css', array(), ZUTALW_VERSION );
         wp_enqueue_style( 'zutalw-admin-the-wheel_css', ZUTALW_ASSETS_URL . 'css/rotate_style.css', array(), ZUTALW_VERSION );
         wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_script( 'wp-color-picker' );
+        
+        // Scripts
         wp_enqueue_media();
+        wp_enqueue_script( 'wp-color-picker' );
 
         // Engine Scripts
         wp_enqueue_script( 'p5-js', ZUTALW_ASSETS_URL . 'js/p5.min.js', array(), ZUTALW_VERSION, true );
@@ -106,7 +108,7 @@ class ZUTALW_Admin {
         wp_enqueue_script( 'particle-js', ZUTALW_ASSETS_URL . 'js/particle.js', array('matter-js'), ZUTALW_VERSION, true );
         wp_enqueue_script( 'boundary-js', ZUTALW_ASSETS_URL . 'js/boundary.js', array('matter-js'), ZUTALW_VERSION, true );
 
-        // Main Sketch
+        // Main Sketch (This needs the Config variable FIRST)
         wp_enqueue_script( 'zutalw-sketch', ZUTALW_ASSETS_URL . 'js/sketch.js', array( 'matter-js', 'decomp-js' ), ZUTALW_VERSION, true );
 
         // Helper Scripts
@@ -120,18 +122,18 @@ class ZUTALW_Admin {
         $localize_data = array(
             'ajax_url'    => admin_url( 'admin-ajax.php' ),
             'home_url'    => home_url(),
-            'assets_url'  => ZUTALW_ASSETS_URL,
+            'assets_url'  => ZUTALW_ASSETS_URL, // Path for Audio
             'plugin_url'  => ZUTALW_URL,
             'mode_admin'  => 'true',
             'getConfig'   => $config_json,
-            'nonce'       => wp_create_nonce( 'zutalw-nonce' ), // Unified nonce name
+            'nonce'       => wp_create_nonce( 'zutalw-nonce' ),
             'recaptcha_site_key' => '',
             'device_id'   => 'admin_preview'
         );
 
-        // Attach ONLY to 'zutalw-admin-js' (which loads setupgame.js). 
-        // Sketch.js will also see it because it's a global variable.
-        wp_localize_script( 'zutalw-admin-js', 'ZutalwConfig', $localize_data );
+        // [CRITICAL FIX] Attach to 'zutalw-sketch' instead of 'zutalw-admin-js'.
+        // sketch.js loads BEFORE setupgame.js, so it needs the config variable available immediately.
+        wp_localize_script( 'zutalw-sketch', 'ZutalwConfig', $localize_data );
     }
 
     private function render_trigger_guide() {
@@ -139,7 +141,7 @@ class ZUTALW_Admin {
         <div class="card" style="max-width: 100%; margin-top: 20px;">
             <h2><?php esc_html_e( 'Manual Trigger Guide', 'zuta-lucky-wheel' ); ?></h2>
             <div style="background:#f0f0f1; padding:20px; border-radius:4px; border:1px dashed #ccc; margin: 20px 0;">
-                <code style="font-size: 1.5em; color: #d63638; user-select:all;">#lucky_spin_license=0</code>
+                <code style="font-size: 1.5em; color: #d63638; user-select:all;">#zutalw_lucky_spin=0</code>
             </div>
             <h3><?php esc_html_e( 'Implementation Examples:', 'zuta-lucky-wheel' ); ?></h3>
             <table class="widefat fixed" cellspacing="0" style="margin-top: 10px;">
@@ -152,15 +154,15 @@ class ZUTALW_Admin {
                 <tbody>
                     <tr>
                         <td><strong><?php esc_html_e( 'Button or Link', 'zuta-lucky-wheel' ); ?></strong></td>
-                        <td><code>&lt;a href="#lucky_spin_license=0" class="my-button"&gt; Spin Now &lt;/a&gt;</code></td>
+                        <td><code>&lt;a href="#zutalw_lucky_spin=0" class="my-button"&gt; Spin Now &lt;/a&gt;</code></td>
                     </tr>
                     <tr>
                         <td><strong><?php esc_html_e( 'Image Click', 'zuta-lucky-wheel' ); ?></strong></td>
-                        <td><code>&lt;a href="#lucky_spin_license=0"&gt; &lt;img src="banner.jpg" /&gt; &lt;/a&gt;</code></td>
+                        <td><code>&lt;a href="#zutalw_lucky_spin=0"&gt; &lt;img src="banner.jpg" /&gt; &lt;/a&gt;</code></td>
                     </tr>
                     <tr>
                         <td><strong><?php esc_html_e( 'Navigation Menu', 'zuta-lucky-wheel' ); ?></strong></td>
-                        <td><?php esc_html_e( 'Create a "Custom Link" in Menus and set the URL to #lucky_spin_license=0', 'zuta-lucky-wheel' ); ?></td>
+                        <td><?php esc_html_e( 'Create a "Custom Link" in Menus and set the URL to #zutalw_lucky_spin=0', 'zuta-lucky-wheel' ); ?></td>
                     </tr>
                 </tbody>
             </table>

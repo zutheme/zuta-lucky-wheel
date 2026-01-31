@@ -13,7 +13,7 @@ class ZUTALW_Database {
      */
     public function create_config() {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'configgames';
+        $table_name = $wpdb->prefix . 'zutalw_configgame';
         $charset_collate = $wpdb->get_charset_collate();
 
         $sql = "CREATE TABLE {$table_name} (
@@ -46,7 +46,7 @@ class ZUTALW_Database {
      */
     public function create_customer() {
         global $wpdb;
-        $t_customer = $wpdb->prefix . 'customers';
+        $t_customer = $wpdb->prefix . 'zutalw_customers';
         $charset_collate = $wpdb->get_charset_collate();
 
         $sql = "CREATE TABLE {$t_customer} (

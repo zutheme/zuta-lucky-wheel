@@ -106,47 +106,7 @@ class ZUTALW_Admin_Customers {
         $tab_slug  = isset( $_REQUEST['tab'] )  ? sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) )  : '';
 
         ?>
-        <style>
-            /* Pagination Container */
-            .zutalw-pagination { 
-                margin: 5px 0; 
-                text-align: right; 
-                line-height: 2;
-            }
-            
-            /* Pagination Button Base Style */
-            .zutalw-pagination .page-numbers {
-                display: inline-block;
-                padding: 3px 5px;
-                margin: 0 2px;
-                text-decoration: none;
-                background: #fff;
-                color: #0073aa;
-                border: 1px solid #0073aa;
-                border-radius: 4px; /* Bo góc nhẹ như hình pages.png */
-                font-weight: 500;
-                min-width: 15px;
-                text-align: center;
-            }
-
-            /* Active/Current Page Style */
-            .zutalw-pagination .page-numbers.current {
-                background: #0073aa; /* Màu xanh đặc trưng của WP */
-                color: #fff;
-                border-color: #0073aa;
-            }
-
-            /* Hover State */
-            .zutalw-pagination .page-numbers:hover:not(.current) {
-                background: #f0f0f0;
-                color: #00a0d2;
-            }
-
-            /* Next/Previous Buttons */
-            .zutalw-pagination .next, .zutalw-pagination .prev {
-                font-weight: bold;
-            }
-        </style>
+      
         <div class="wrap">
             <h1><?php esc_html_e( 'Customers List', 'zuta-lucky-wheel' ); ?></h1>
             <form method="get">

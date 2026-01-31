@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 class ZUTALW_Shortcode {
 
     public function __construct() {
-        add_shortcode( 'lucky_spin', array( $this, 'shortcode_output' ) );
+         add_shortcode( 'zutalw_lucky_spin', array( $this, 'shortcode_output' ) );
     }
 
     public function shortcode_output( $atts = array(), $content = '' ) {

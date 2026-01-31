@@ -21,7 +21,7 @@ class ZUTALW_Model_ConfigGame {
      */
     public function __construct() {
         global $wpdb;
-        $this->table = $wpdb->prefix . 'configgames';
+        $this->table = $wpdb->prefix . 'zutalw_configgame';
 
         // Automatically create default config if it doesn't exist in the database
         $this->ensure_default_exists();

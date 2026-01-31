@@ -46,7 +46,7 @@ class ZUTALW_Frontend {
             'arcshape'  => ZUTALW_ASSETS_URL . 'js/arcshape.js' . $ver,
             'particle'  => ZUTALW_ASSETS_URL . 'js/particle.js' . $ver,
             'boundary'  => ZUTALW_ASSETS_URL . 'js/boundary.js' . $ver,
-            'fingerprint' => ZUTALW_ASSETS_URL . 'js/iife.min.js'. $ver,
+            'fingerprint' => ZUTALW_ASSETS_URL . 'js/fingerprint.min.js'. $ver,
             'sketch'    => ZUTALW_ASSETS_URL . 'js/sketch.js' . $ver,
             'custom'    => ZUTALW_ASSETS_URL . 'js/custom_rotate.js' . $ver,
         );
@@ -59,7 +59,7 @@ class ZUTALW_Frontend {
             'plugin_url'  => ZUTALW_URL,
             'mode_admin'  => 'false',
             'getConfig'   => $config_json,
-            'nonce'       => wp_create_nonce( 'zutalw-nonce' ), // <--- CRITICAL KEY
+            'nonce'       => wp_create_nonce( 'zutalw-nonce' ), 
             'popup_delay' => (int)get_option( 'zutalw_popup_delay', 0 ) * 1000, 
             'max_spins'   => get_option( 'zutalw_max_spins', 1 ),
             'recaptcha_site_key' => get_option( 'zutalw_recaptcha_site_key', '' ),
@@ -77,12 +77,10 @@ class ZUTALW_Frontend {
         // 6. Enqueue Trigger file
         wp_enqueue_script( 'zutalw-trigger', ZUTALW_ASSETS_URL . 'js/zutalw-trigger.js', array( 'jquery' ), ZUTALW_VERSION, true );
         
-        // 7. PASS DATA TO TRIGGER (Fixes Timing/Race Condition)
-        // We attach 'ZutalwConfig' to 'zutalw-trigger' because trigger loads sketch.js.
-        // This ensures Config exists before Sketch runs.
+        // 7. PASS DATA TO TRIGGER
         wp_localize_script( 'zutalw-trigger', 'ZutalwConfig', $localize_data );
 
-        // 8. Pass script list separately (Lazy loader)
+        // 8. Pass script list separately
         wp_localize_script( 'zutalw-trigger', 'zutalw_Lazy_Assets', array(
             'scripts' => $scripts
         ));
@@ -102,7 +100,7 @@ class ZUTALW_Frontend {
     public function auto_display_wheel() {
         if ( is_admin() || current_user_can( 'manage_options' ) ) return;
         $gift_url = ZUTALW_ASSETS_URL . 'images/gift1.png'; 
-        echo '<div id="zutalw-gift-trigger" class="zutalw-gift-overlay" style="display:none;"><div class="zutalw-gift-card"><div class="zutalw-card-close">&#10005;</div><div class="zutalw-card-img-wrapper"><img src="' . esc_url($gift_url) . '" class="zutalw-card-img"></div><h3 class="zutalw-card-title">' . esc_html__( 'CONGRATULATIONS!', 'zuta-lucky-wheel' ) . '</h3><p class="zutalw-card-desc"><br><span class="highlight"><span id="zutalw-spins-left">1</span> ' . esc_html__( 'FREE SPINS', 'zuta-lucky-wheel' ) . '</span></p><a href="#lucky_spin_license=0" class="zutalw-card-btn">' . esc_html__( 'SPIN NOW', 'zuta-lucky-wheel' ) . '</a></div></div>'; 
+        echo '<div id="zutalw-gift-trigger" class="zutalw-gift-overlay" style="display:none;"><div class="zutalw-gift-card"><div class="zutalw-card-close">&#10005;</div><div class="zutalw-card-img-wrapper"><img src="' . esc_url($gift_url) . '" class="zutalw-card-img"></div><h3 class="zutalw-card-title">' . esc_html__( 'CONGRATULATIONS!', 'zuta-lucky-wheel' ) . '</h3><p class="zutalw-card-desc"><br><span class="highlight"><span id="zutalw-spins-left">1</span> ' . esc_html__( 'FREE SPINS', 'zuta-lucky-wheel' ) . '</span></p><a href="#zutalw_lucky_spin=0" class="zutalw-card-btn">' . esc_html__( 'SPIN NOW', 'zuta-lucky-wheel' ) . '</a></div></div>'; 
         echo '<div id="zutalw-popup-wrapper" style="display:none;"><div class="zutalw-game-card"><div class="zutalw-close-game">&#10005;</div><h3 class="zutalw-game-title">' . esc_html( get_option( 'zutalw_game_title', 'Zuta Lucky Wheel' ) ) . '</h3><div class="zutalw-wheel-pointer"></div><div id="area-game" data-id="0" data-license="0"></div></div></div>';
     }
 
@@ -120,12 +118,16 @@ class ZUTALW_Frontend {
         if ( empty($device_id) || $device_id === 'unknown' ) { wp_send_json_error( array( 'message' => 'Identity error.' ) ); }
         
         global $wpdb;
-        $table = $wpdb->prefix . 'customers';
+        $table = $wpdb->prefix . 'zutalw_customers'; 
+        
+        // [FIX] Combine everything into one line to ensure phpcs:ignore works for both interpolation and direct query.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $row = $wpdb->get_row( $wpdb->prepare( "SELECT spin_limit FROM $table WHERE device_id = %s LIMIT 1", $device_id ) );
         
         $limit = $row ? (int)$row->spin_limit : (int)get_option( 'zutalw_max_spins', 1 );
         
         if (!$row) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $wpdb->insert( $table, array( 'device_id' => $device_id, 'spin_limit' => $limit, 'fullname' => 'Guest' ), array( '%s', '%d', '%s' ) );
         }
         

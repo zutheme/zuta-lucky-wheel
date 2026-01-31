@@ -16,7 +16,7 @@ class ZUTALW_Model_Customer {
      */
     public function __construct() {
         global $wpdb;
-        $this->table = $wpdb->prefix . 'customers';
+        $this->table = $wpdb->prefix . 'zutalw_customers';
     }
 
     /**

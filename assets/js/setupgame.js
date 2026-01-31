@@ -1,5 +1,6 @@
 /**
  * setupgame.js — Admin config editor (UNIFIED & CLEAN VERSION)
+ * FIXED: Replaced Raw JSON payload with URLSearchParams for WP Compliance
  */
 
 let objconfig = [];
@@ -14,7 +15,7 @@ if (typeof ZutalwConfig !== "undefined" && ZutalwConfig.getConfig) {
         objconfig = [];
     }
 } else {
-    console.warn("ZutalwConfig.getConfig missing");
+    // console.warn("ZutalwConfig.getConfig missing");
     objconfig = []; // Init empty to prevent errors
 }
 
@@ -38,7 +39,10 @@ jQuery(document).ready(function($){
 
             let hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
 
-            updateObj(event.target.dataset.key, hex, event.target.dataset.row);
+            // Fix: ensure row is retrieved correctly
+            let row = event.target.dataset.row;
+            let key = event.target.dataset.key;
+            updateObj(key, hex, row);
         },
         hide: true,
         palettes: true
@@ -82,22 +86,27 @@ function saveConfig(){
     let http = new XMLHttpRequest();
     
     // FIX: Use ZutalwConfig for URL and Nonce
-    // FIX: Action name must match 'wp_ajax_zutalw_save_config' in class-zutalw-ajax.php
-    let url = ZutalwConfig.ajax_url + "?action=zutalw_save_config&security=" + ZutalwConfig.nonce;
+    let url = ZutalwConfig.ajax_url + "?action=zutalw_UpdateConfig&security=" + ZutalwConfig.nonce;
     
-    let params = JSON.stringify({
-        dataconfig: objconfig,
-        idconfiggame: id,
-        nameconfig: "config",
-        level: 1,
-        license: 0
-    });
+    // [MODIFIED] Use URLSearchParams instead of JSON.stringify for whole body
+    let params = new URLSearchParams();
+    
+    // We stringify the array so PHP receives it as a string in $_POST['dataconfig']
+    // PHP will then decode it. This avoids "Processing whole input" issues.
+    params.append('dataconfig', JSON.stringify(objconfig));
+    
+    params.append('idconfiggame', id);
+    params.append('nameconfig', "config");
+    params.append('level', 1);
+    params.append('license', 0);
 
     if (zutalwLoader) zutalwLoader.style.display = "block";
 
     http.open("POST", url, true);
     http.setRequestHeader("Accept", "application/json");
-    http.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    
+    // [MODIFIED] Set correct header for Form Data
+    http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 
     http.onreadystatechange = function(){
         if (http.readyState === 4){
@@ -133,7 +142,8 @@ function saveConfig(){
         }
     };
 
-    http.send(params);
+    // [MODIFIED] Send stringified params
+    http.send(params.toString());
 }
 
 

@@ -1,5 +1,7 @@
 // =======================================================
-//  SKETCH.JS - Final Version (Auto-Detect Path & AJAX Fix)
+//  SKETCH.JS - WP.org Compliant Version
+//  FIXED: Removed hardcoded paths & auto-detect logic.
+//  Strictly uses 'ZutalwConfig' passed via wp_localize_script.
 // =======================================================
 
 // Matter.js bindings
@@ -43,60 +45,33 @@ let x_win0 = 0, y_win0 = 0;
 // Flag to prevent double checking
 let winnerFound = false; 
 
-// ===================== GUARD & CONFIG (AUTO DETECT FIX) =====================
+// ===================== GUARD & CONFIG (STRICT MODE) =====================
 
 // 1. Normalize Global Config Object
+// We allow zutalw_Lazy_Assets as a bridge, but strictly NO hardcoded fallbacks.
 if (typeof window.ZutalwConfig === 'undefined') {
     if (typeof window.zutalw_Lazy_Assets !== 'undefined' && window.zutalw_Lazy_Assets.config_data) {
          window.ZutalwConfig = window.zutalw_Lazy_Assets.config_data;
-    } else {
-         window.ZutalwConfig = { assets_url: '' }; // Don't set hardcoded ajax_url here yet
     }
 }
 
-// 2. Determine Plugin Directory (Smart Detection)
-let _plugin_dir = '';
+// 2. Validate Configuration
+if (typeof window.ZutalwConfig === 'undefined' || !window.ZutalwConfig.ajax_url) {
+    console.error("zutalw Critical Error: 'ZutalwConfig' or 'ajax_url' is missing. Please check wp_localize_script in PHP.");
+    // We do NOT set a fallback '/wp-admin/admin-ajax.php' here as per WP.org guidelines.
+}
 
-// Strategy A: From PHP Config (Best)
+// 3. Determine Plugin Directory (Strictly from Config)
+let _plugin_dir = '';
 if (window.ZutalwConfig && window.ZutalwConfig.assets_url) {
     _plugin_dir = window.ZutalwConfig.assets_url;
-} 
-// Strategy B: Auto-detect from script tag
-else {
-    const scripts = document.getElementsByTagName('script');
-    for (let i = 0; i < scripts.length; i++) {
-        const src = scripts[i].src;
-        if (src && src.indexOf('sketch.js') !== -1) {
-            let cleanSrc = src.split('?')[0]; 
-            if (cleanSrc.indexOf('js/sketch.js') !== -1) {
-                 _plugin_dir = cleanSrc.substring(0, cleanSrc.indexOf('js/sketch.js'));
-                 console.log("zutalw Debug: Auto-detected assets path: " + _plugin_dir);
-                 break;
-            }
-        }
-    }
 }
-// Fallback
-if (!_plugin_dir) {
-    _plugin_dir = window.location.origin + '/wp-content/plugins/zuta-lucky-wheel/assets/';
-}
+
+// Ensure trailing slash
 if (_plugin_dir && _plugin_dir.slice(-1) !== '/') _plugin_dir += '/';
 
-console.log("zutalw Debug: Final Assets URL: ", _plugin_dir);
-
-// 3. Determine AJAX URL (Smart Detection based on Assets URL)
-if (!window.ZutalwConfig.ajax_url) {
-    // Logic: If assets is at http://localhost/demoweb/wp-content/..., 
-    // then AJAX is at http://localhost/demoweb/wp-admin/admin-ajax.php
-    if (_plugin_dir.indexOf('wp-content') !== -1) {
-        let siteRoot = _plugin_dir.split('wp-content')[0];
-        window.ZutalwConfig.ajax_url = siteRoot + 'wp-admin/admin-ajax.php';
-        console.log("zutalw Debug: Auto-detected AJAX URL: ", window.ZutalwConfig.ajax_url);
-    } else {
-        // Fallback relative (works if installed at root)
-        window.ZutalwConfig.ajax_url = '/wp-admin/admin-ajax.php';
-    }
-}
+console.log("zutalw Debug: Assets URL:", _plugin_dir);
+console.log("zutalw Debug: AJAX URL:", window.ZutalwConfig ? window.ZutalwConfig.ajax_url : 'MISSING');
 
 // ===================== END CONFIG =====================
 
@@ -161,7 +136,7 @@ let l = new URL(window.location.href);
 let _path = l.pathname;
 let _idcampain = 1, _license = 0;
 
-if (_path === '/wp-admin/options-general.php' && getQueryParam('page') === 'rotate-configuration' && getQueryParam('tab') === 'setup') {
+if (_path.indexOf('options-general.php') !== -1 && getQueryParam('page') === 'rotate-configuration') {
     _idcampain = getQueryParam('idcampain') || 1;
 } else {
     let e_game = document.getElementById("area-game");
@@ -185,11 +160,17 @@ let dataconfig = null; // Initialize as null
 
 // ===================== P5 SETUP =====================
 function setup() {
+    // [FIX] Bind to window for global access (especially with Lazy Load)
+    window.setup = setup;
     console.log("zutalw Debug: Setup started");
     let container = document.getElementById("area-game");
 
     if (container) {
-        canvas = createCanvas(w_default(), h_default());
+        // [FIX] Ensure container has dimensions, or fallback to defaults
+        let w = container.offsetWidth || w_default();
+        let h = container.offsetHeight || h_default();
+        
+        canvas = createCanvas(w, h);
         canvas.parent('area-game');
         clear();
         // Always fetch config on startup
@@ -204,6 +185,8 @@ function setup() {
         if (typeof Runner !== 'undefined' && Runner.run) {
             Runner.run(engine);
         }
+    } else {
+        console.error("zutalw Error: #area-game container NOT found!");
     }
 }
 
@@ -220,33 +203,36 @@ function h_default() {
 function getdatascore(callback) {
     let http = new XMLHttpRequest();
     
-    // FIX: Get AJAX URL from our smart detected config
-    let baseAjax = window.ZutalwConfig.ajax_url;
-    
-    // Safety Fallback if somehow still empty (should be caught by logic above)
-    if (!baseAjax) baseAjax = '/wp-admin/admin-ajax.php';
+    // [FIX] STRICTLY use localized URL. NO hardcoded fallback.
+    let baseAjax = window.ZutalwConfig ? window.ZutalwConfig.ajax_url : null;
+    if (!baseAjax) {
+        console.error("zutalw Error: AJAX URL missing.");
+        return;
+    }
 
-    // FIX: Added 'zutalw_' prefix to action name
+    // FIX: Action remains in URL for simplicity in routing, data goes in POST body
     let url = baseAjax + "?action=zutalw_getdataConfig";
     
-    // Ensure we have IDs
     let id_c = _idcampain || 1;
     let lic = _license || 0;
 
-    let params = JSON.stringify({ idcampain: id_c, license: lic });
+    // [MODIFIED] Use URLSearchParams instead of JSON.stringify for Form Data
+    let params = new URLSearchParams();
+    params.append('idcampain', id_c);
+    params.append('license', lic);
 
     if (load) load.style.display = "block";
     
     http.open("POST", url, true);
     http.setRequestHeader("Accept", "application/json");
-    http.setRequestHeader("Content-type", "charset=utf-8");
+    // [MODIFIED] Correct Header for $_POST compatibility
+    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
     
     http.onreadystatechange = function () {
         if (http.readyState === 4) {
             if (http.status === 200) {
                 try {
                     let arr = JSON.parse(this.responseText);
-                    // CRITICAL FIX: Assign global dataconfig
                     dataconfig = arr; 
                     callback(arr);
                 } catch (e) { console.error('zutalw Error: Invalid JSON Config', e); }
@@ -256,7 +242,8 @@ function getdatascore(callback) {
             if (load) load.style.display = "none";
         }
     };
-    http.send(params);
+    // [MODIFIED] Send string
+    http.send(params.toString());
 }
 
 // ===================== RESTART GAME (CLEANUP & INIT) =====================
@@ -402,8 +389,16 @@ function mousePressed() {
                 window.isCheckingServer = true;
                 document.body.style.cursor = 'wait';
 
-                // FIX: Added 'zutalw_' prefix to action name
-                // FIX: Use ZutalwConfig for global settings
+                // [FIX] STRICTLY use localized AJAX URL
+                let ajaxUrl = window.ZutalwConfig ? window.ZutalwConfig.ajax_url : null;
+                if (!ajaxUrl) {
+                     console.error("zutalw Error: AJAX URL missing in mousePressed.");
+                     window.isCheckingServer = false;
+                     return;
+                }
+
+                // FIX: jQuery ajax automatically sends object as Form Data (application/x-www-form-urlencoded)
+                // This is compatible with the PHP $_POST fix.
                 let data = {
                     action: 'zutalw_get_spin_result', 
                     security: window.ZutalwConfig.nonce,
@@ -414,9 +409,9 @@ function mousePressed() {
                 };
 
                 jQuery.ajax({
-                    url: window.ZutalwConfig.ajax_url, // Now uses the auto-detected URL
+                    url: ajaxUrl, 
                     type: 'POST',
-                    data: data,
+                    data: data, // jQuery sends this as form data, NO JSON.stringify needed
                     success: function(response) {
                         window.isCheckingServer = false;
                         document.body.style.cursor = 'default';
@@ -433,7 +428,6 @@ function mousePressed() {
                             console.warn("zutalw Debug: Server Denied - " + (response.data ? response.data.message : 'Unknown error'));
                             let msg = (response.data && response.data.message) ? response.data.message : "Error processing spin.";
                             
-                            // Check for new prefix function name zutalw_show_notice
                             if (typeof zutalw_show_notice === 'function') {
                                 zutalw_show_notice(msg);
                             } else {
@@ -544,6 +538,9 @@ function start_physics_spin(targetIndex) {
 
 // ===================== DRAW LOOP (FIXED VOLUME LOGIC) =====================
 function draw() {
+    // [FIX] Bind to window for global access
+    window.draw = draw;
+
     if (!document.getElementById("area-game")) return false;
     clear();
     // --- DECELERATION & AUDIO FADE ---
